@@ -1,0 +1,107 @@
+{"properties": [
+  {
+    "name": "datahub.admin.api.origins",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.origins'"
+  },
+  {
+    "name": "datahub.admin.api.methods",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.methods'"
+  },
+  {
+    "name": "datahub.admin.api.es.repos.index",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.repos.index'"
+  },
+  {
+    "name": "datahub.admin.api.es.repos.fields",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.repos.fields'"
+  },
+  {
+    "name": "datahub.admin.api.es.sort.by",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.sort.by'"
+  },
+  {
+    "name": "datahub.admin.api.es.sort.order",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.sort.order'"
+  },
+  {
+    "name": "datahub.admin.api.configurations.index",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.configurations.index'"
+  },
+  {
+    "name": "codehub.admin.api.configurations.default",
+    "type": "java.lang.String",
+    "description": "A description for 'codehub.admin.api.configurations.default'"
+  },
+  {
+    "name": "codehub.admin.api.configurations.images.list",
+    "type": "java.lang.String",
+    "description": "A description for 'codehub.admin.api.configurations.images.list'"
+  },
+  {
+    "name": "datahub.admin.api.configurations.images.path",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.configurations.images.path'"
+  },
+  {
+    "name": "datahub.admin.api.es.repos.limit",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.repos.limit'"
+  },
+  {
+    "name": "datahub.admin.api.es.scheme",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.scheme'"
+  },
+  {
+    "name": "datahub.admin.api.es.port",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.port'"
+  },
+  {
+    "name": "datahub.admin.api.es.host",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.host'"
+  },
+  {
+    "name": "datahub.admin.api.configurations.default",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.configurations.default'"
+  },
+  {
+    "name": "datahub.admin.api.configurations.images.list",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.configurations.images.list'"
+  },
+  {
+    "name": "datahub.admin.api.security.token.name",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.security.token.name'"
+  },
+  {
+    "name": "datahub.admin.api.security.token.key",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.security.token.key'"
+  },
+  {
+    "name": "datahub.admin.api.es.dataassets.limit",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.dataassets.limit'"
+  },
+  {
+    "name": "datahub.admin.api.es.dataassets.index",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.dataassets.index'"
+  },
+  {
+    "name": "datahub.admin.api.es.dataassets.fields",
+    "type": "java.lang.String",
+    "description": "A description for 'datahub.admin.api.es.dataassets.fields'"
+  }
+]}
