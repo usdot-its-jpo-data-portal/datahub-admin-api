@@ -73,7 +73,6 @@ public class DataAssetsDaoImpl implements DataAssetsDao {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			DataAsset dataAsset = mapper.convertValue(sourceAsMap, DataAsset.class);
-			dataAsset.setId(hit.getId());
 			result.add(dataAsset);
 		}
 
