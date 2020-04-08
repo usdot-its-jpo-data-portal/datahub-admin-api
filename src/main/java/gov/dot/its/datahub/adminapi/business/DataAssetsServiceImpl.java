@@ -46,7 +46,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 			if (!dataAssets.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, dataAssets, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+dataAssets.size());
 				return apiResponse;
 			}
 

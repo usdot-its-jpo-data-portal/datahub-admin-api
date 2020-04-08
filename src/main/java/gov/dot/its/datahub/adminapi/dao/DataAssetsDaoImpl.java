@@ -2,6 +2,8 @@ package gov.dot.its.datahub.adminapi.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,8 +100,11 @@ public class DataAssetsDaoImpl implements DataAssetsDao {
 
 	@Override
 	public String updateProject(DataAsset dataAsset) throws IOException {
-		UpdateRequest updateRequest = new UpdateRequest(dataAssetsIndex, "_doc", dataAsset.getDhId())
-				.doc("dhProjects", dataAsset.getDhProjects());
+		Map<String, Object> jsonMap = new HashMap<>();
+		jsonMap.put("dhProjects", dataAsset.getDhProjects());
+		jsonMap.put("dhLastUpdate", new Date(dataAsset.getDhLastUpdate().getTime()));
+
+		UpdateRequest updateRequest = new UpdateRequest(dataAssetsIndex, "_doc", dataAsset.getDhId()).doc(jsonMap);
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
 		return updateResponse.getResult().name();
 	}
