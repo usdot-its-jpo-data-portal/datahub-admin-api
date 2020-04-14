@@ -1,0 +1,240 @@
+:toc: left
+:toclevels: 4
+:snippets: ../../../target/generated-snippets
+
+= ITS DataHub
+
+== Admin API
+`version: 1.0.0`
+
+The Admin API of DataHub has the function to administer the metadata information for the DataHub system. The API connect to an https://www.elastic.co/products/enterprise-search[ElasticSearch] storage system
+
+=== Change Log
+Changes related to the previous version.
+
+`Previous version: none`
+
+* Initial Version
+** Support for : Configurations and DataAssets
+
+
+== Header token validation
+The API is expecting to receive a TOKEN in the header under the name DHTOKEN. This value needs to be provided as part of the configuration of the API.
+Failing to provide the CHTOKEN will return in UNAUTHORIZED.
+
+include::{snippets}/api/auth/http-response.adoc[]
+
+
+== Configurations
+
+The Configuration information is presented through an structure (DHConfiguration) that contains the following properties.
+
+*DHConfiguration*
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|id   |String   |Unique hash ID
+|name |String...|Configuration name
+|projects   |List<**DHProject**>   |List of Projects
+|===
+
+*DHProject*
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|id   |String   |Unique Project ID
+|name |String   |Name given to the Project
+|description|String|Project description
+|isEnabled|Boolean|Flag to enable/disable a Project
+|lastModified|Date|Last time that the Project was modified
+|isPopular|Boolean|Flag to make a Project popular or not
+|orderPopular|Long|Order in case of the Project is flagged as popular.
+|imageFileName|String|Image name in case of the Project is popular.
+|===
+
+
+=== Configurations
+Gets the configurations
+
+==== Request
+include::{snippets}/api/v1/configurations/data/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/data/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/data/http-response.adoc[]
+
+
+=== List Projects
+Get list of Projects
+
+==== Request
+include::{snippets}/api/v1/configurations/projects/get/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/projects/get/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/projects/get/http-response.adoc[]
+
+
+=== Add Project
+Add a project using the POST method. 
+
+==== Request
+include::{snippets}/api/v1/configurations/projects/post/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/projects/post/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/projects/post/http-response.adoc[]
+
+
+=== Update Project
+Update a Project using the PUT method.
+
+==== Request
+include::{snippets}/api/v1/configurations/projects/put/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/projects/put/curl-request.adoc[]
+
+==== Response
+
+include::{snippets}/api/v1/configurations/projects/put/http-response.adoc[]
+
+
+=== Delete Project
+Delete a Project using the DELETE method.
+
+==== Request
+include::{snippets}/api/v1/configurations/projects/delete/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/projects/delete/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/projects/delete/http-response.adoc[]
+
+
+=== List Project Images
+List Project images used by "popular" Projects.
+
+==== Request
+include::{snippets}/api/v1/configurations/projects/images/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/projects/images/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/projects/images/http-response.adoc[]
+
+
+== DataAssets
+
+DataAssets information is presented through the usage of a *DataAsset* structure.
+This API allows to list the available DataAssets and update the "dhProjects" property.
+
+=== DataAsset
+
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|*id*   |String   |Original ID
+|*name*   |String   |Name of the data asset.
+|*description*   |String   |Description of the data asset.
+|*accessLevel*   |String   |Access level (Public or Private).
+|*lastUpdate*   |Timestamp   |Last date and time that the data asset was updated.
+|*tags*   |List<String>   |List of Strings containing the tags.
+|*sourceUrl*   |String   |Url to the data asset data/site.
+|*dhId*   |String   |Internal DataHub ID to avoid collitions between data assets from different sources.
+|*dhLastUpdate*   |Timestamp   |Last time that record was update by the DataHub ingestion system.
+|*dhSourceName*   |String   |Data source identification.
+|*highlights*   |Map<String,List<String>>   |In the case of search this field contains the fragments where the search word/phrase was found.
+|*esScore*   |Float   |Contains the Elasticsearch score value after a search is executed.
+|*related*   |List<RelatedItemModel>   |List of related CodeHub items
+|*metrics*   |**Metrics**   |Contains the metrics values for the current DataAsset.
+|*dhProjects*|List<String>|List of Project IDs that the DataAsset belong to.
+|===
+
+=== RelatedItemModel
+
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|*id*   |String   |Related item id (CodeHub Project ID)
+|*name*   |String   |Related item name (CodeHub Project Name)
+|*sourceUrl*   |String   |Url to related item in CodeHub
+|===
+
+=== Metrics
+
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|*downloadsTotal*   |Long   |Number of total downloads
+|*pageViewsLastMonth*   |Long   |Number of page views during last month
+|*pageViewsTotal*   |Long   |Total number of page views
+|===
+
+
+=== List DataAssets
+List the available DataAssets
+
+==== Request
+include::{snippets}/api/v1/dataassets/get/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/dataassets/get/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/dataassets/get/http-response.adoc[]
+
+
+=== Get DataAsset by ID
+Get a DataAsset by its ID
+
+==== Request
+include::{snippets}/api/v1/dataassets/get-id/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/dataassets/get-id/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/dataassets/get-id/http-response.adoc[]
+
+
+=== Update DataAsset
+Updates a DataAsset using the dhId and the information presented on the body request.
+
+==== Request
+include::{snippets}/api/v1/dataassets/put/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/dataassets/put/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/dataassets/put/http-response.adoc[]
