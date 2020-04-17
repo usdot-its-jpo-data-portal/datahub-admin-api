@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.dot.its.datahub.adminapi.business.ConfigurationService;
 import gov.dot.its.datahub.adminapi.model.ApiResponse;
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
+import gov.dot.its.datahub.adminapi.model.DHDataType;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 import gov.dot.its.datahub.adminapi.testutils.TestUtils;
 
@@ -44,9 +45,10 @@ import gov.dot.its.datahub.adminapi.testutils.TestUtils;
 @WebMvcTest(ConfigurationController.class)
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets", uriHost = "example.com", uriPort = 3008, uriScheme = "http")
 @ComponentScan("gov.dot.its.datahub.adminapi.testutils")
-class ConfigurationControllerTest {
+public class ConfigurationControllerTest {
 
 	private static final String URL_PROJECTS_TEMPLATE = "%s/v1/configurations/projects";
+	private static final String URL_DATATYPES_TEMPLATE = "%s/v1/configurations/datatypes";
 	private static final String SECURITY_TOKEN_KEY = "datahub.admin.api.security.token.key";
 
 	@Autowired
@@ -68,8 +70,12 @@ class ConfigurationControllerTest {
 		System.setProperty(SECURITY_TOKEN_KEY, "123");
 	}
 
+	public ConfigurationControllerTest() {
+		// Required by jUnit.
+	}
+
 	@Test
-	void testUnAuthorized() throws Exception { // NOSONAR
+	public void testUnAuthorized() throws Exception { // NOSONAR
 		final String SERVER_SERVLET_CONTEXT_PATH = "server.servlet.context-path";
 		final String HEADER_HOST = "Host";
 		final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -97,7 +103,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testConfigurations() throws Exception { // NOSONAR
+	public void testConfigurations() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 
@@ -124,7 +130,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testProjects() throws Exception { // NOSONAR
+	public void testProjects() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 
@@ -151,7 +157,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testProject() throws Exception { // NOSONAR
+	public void testProject() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 
@@ -178,7 +184,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testAddProject() throws Exception { // NOSONAR
+	public void testAddProject() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("POST");
 
@@ -207,7 +213,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testUpdateProject() throws Exception { // NOSONAR
+	public void testUpdateProject() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("PUT");
 
@@ -235,7 +241,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testDeleteProject() throws Exception { // NOSONAR
+	public void testDeleteProject() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("DELETE");
 
@@ -261,7 +267,7 @@ class ConfigurationControllerTest {
 	}
 
 	@Test
-	void testProjectsImages() throws Exception { // NOSONAR
+	public void testProjectsImages() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 
@@ -288,6 +294,141 @@ class ConfigurationControllerTest {
 		assertTrue(responseApi.getMessages() == null);
 		assertTrue(!responseApi.getResult().isEmpty());
 	}
+
+	@Test
+	public void testDataTypes() throws Exception { // NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("GET");
+
+		DHConfiguration configuration = this.getFakeConfiguration();
+
+		ApiResponse<List<DHDataType>> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, configuration.getDataTypes(), null, null, request);
+
+		when(configurationService.dataTypes(any(HttpServletRequest.class))).thenReturn(apiResponse);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/get", null);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<List<DHDataType>>> valueType = new TypeReference<ApiResponse<List<DHDataType>>>() {
+		};
+		ApiResponse<List<DHDataType>> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(!responseApi.getResult().isEmpty());
+		assertTrue(responseApi.getErrors() == null);
+	}
+
+	@Test
+	public void testDataType() throws Exception { // NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("GET");
+
+		DHDataType dataType = this.getFakeDataType(1);
+
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, dataType, null, null, request);
+
+		when(configurationService.dataType(any(HttpServletRequest.class), any(String.class))).thenReturn(apiResponse);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_DATATYPES_TEMPLATE + "/" + dataType.getId(), "api/v1/configurations/datatypes/get-id", null);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHDataType>> valueType = new TypeReference<ApiResponse<DHDataType>>() {
+		};
+		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertTrue(responseApi.getErrors() == null);
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(responseApi.getResult() != null);
+	}
+
+	@Test
+	public void testAddDataType() throws Exception { // NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("POST");
+
+		DHDataType dataType = this.getFakeDataType(1);
+
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, dataType, null, null, request);
+		when(configurationService.addDataType(any(HttpServletRequest.class), any(DHDataType.class)))
+		.thenReturn(apiResponse);
+
+		String dataTypeStr = objectMapper.writeValueAsString(dataType);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/post", dataTypeStr);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHDataType>> valueType = new TypeReference<ApiResponse<DHDataType>>() {
+		};
+		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertTrue(responseApi.getErrors() == null);
+		assertTrue(responseApi.getResult() != null);
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+	}
+
+	@Test
+	public void testUpdateDataType() throws Exception { // NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("PUT");
+
+		DHDataType dataType = this.getFakeDataType(1);
+
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, dataType, null, null, request);
+		when(configurationService.updateDataType(any(HttpServletRequest.class), any(DHDataType.class)))
+		.thenReturn(apiResponse);
+
+		String dataTypeStr = objectMapper.writeValueAsString(dataType);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/put", dataTypeStr);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHDataType>> valueType = new TypeReference<ApiResponse<DHDataType>>() {
+		};
+		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(responseApi.getResult() != null);
+
+	}
+
+	@Test
+	public void testDeleteDataType() throws Exception { // NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("DELETE");
+
+		DHDataType dataType = this.getFakeDataType(1);
+
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, dataType, null, null, request);
+		when(configurationService.deleteDataType(any(HttpServletRequest.class), any(String.class)))
+		.thenReturn(apiResponse);
+
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+		URL_DATATYPES_TEMPLATE + "/" + dataType.getId(), "api/v1/configurations/datatypes/delete", null);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHDataType>> valueType = new TypeReference<ApiResponse<DHDataType>>() {
+		};
+		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(responseApi.getResult() != null);
+	}
+
 	private DHConfiguration getFakeConfiguration() {
 		DHConfiguration dhConfiguration = new DHConfiguration();
 		dhConfiguration.setId("datahub-default-configuration");
@@ -296,6 +437,9 @@ class ConfigurationControllerTest {
 		for (int i = 0; i < 3; i++) {
 			DHProject project = getFakeProject(i);
 			dhConfiguration.getProjects().add(project);
+
+			DHDataType dataType = getFakeDataType(i);
+			dhConfiguration.getDataTypes().add(dataType);
 		}
 
 		return dhConfiguration;
@@ -312,6 +456,16 @@ class ConfigurationControllerTest {
 		project.setOrderPopular(Long.valueOf(index));
 		project.setPopular(false);
 		return project;
+	}
+
+	private DHDataType getFakeDataType(int index) {
+		DHDataType dataType = new DHDataType();
+		dataType.setId(UUID.randomUUID().toString());
+		dataType.setName(String.format("DataType-%s", index));
+		dataType.setEnabled(true);
+		dataType.setDescription(String.format("Description for DataType %s", index));
+		dataType.setLastModified(new Date());
+		return dataType;
 	}
 
 }

@@ -99,9 +99,10 @@ public class DataAssetsDaoImpl implements DataAssetsDao {
 	}
 
 	@Override
-	public String updateProject(DataAsset dataAsset) throws IOException {
+	public String updateDataAsset(DataAsset dataAsset) throws IOException {
 		Map<String, Object> jsonMap = new HashMap<>();
-		jsonMap.put("dhProjects", dataAsset.getDhProjects());
+    jsonMap.put("dhProjects", dataAsset.getDhProjects());
+    jsonMap.put("dhDataTypes", dataAsset.getDhDataTypes());
 		jsonMap.put("dhLastUpdate", new Date(dataAsset.getDhLastUpdate().getTime()));
 
 		UpdateRequest updateRequest = new UpdateRequest(dataAssetsIndex, "_doc", dataAsset.getDhId()).doc(jsonMap);
@@ -119,7 +120,22 @@ public class DataAssetsDaoImpl implements DataAssetsDao {
 			 }
 			 dataAsset.getDhProjects().remove(id);
 			 stringBuilder.append(String.format("Project [%s] removed from [%s]%n", id, dataAsset.getName()));
-			 this.updateProject(dataAsset);
+			 this.updateDataAsset(dataAsset);
+		 }
+		return stringBuilder.toString();
+	}
+
+	@Override
+	public String removeDataType(String id) throws IOException {
+		List<DataAsset> dataAssets = this.getDataAssets();
+		StringBuilder stringBuilder = new StringBuilder();
+		for(DataAsset dataAsset: dataAssets) {
+			 if (dataAsset.getDhDataTypes().isEmpty() || !dataAsset.getDhDataTypes().contains(id)) {
+				 continue;
+			 }
+			 dataAsset.getDhDataTypes().remove(id);
+			 stringBuilder.append(String.format("DataType [%s] removed from [%s]%n", id, dataAsset.getName()));
+			 this.updateDataAsset(dataAsset);
 		 }
 		return stringBuilder.toString();
 	}

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.dot.its.datahub.adminapi.business.ConfigurationService;
 import gov.dot.its.datahub.adminapi.model.ApiResponse;
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
+import gov.dot.its.datahub.adminapi.model.DHDataType;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 
 @CrossOrigin(maxAge = 3600)
@@ -84,4 +85,43 @@ public class ConfigurationController {
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 	}
 
+	@GetMapping(value="/v1/configurations/datatypes", headers="Accept=application/json", produces="application/json")
+	public ResponseEntity<ApiResponse<List<DHDataType>>> dataTypes(HttpServletRequest request) {
+
+		ApiResponse<List<DHDataType>> apiResponse = configurationService.dataTypes(request);
+
+		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+	}
+
+	@GetMapping(value="/v1/configurations/datatypes/{id}", headers="Accept=application/json", produces="application/json")
+	public ResponseEntity<ApiResponse<DHDataType>> dataType(HttpServletRequest request, @PathVariable(name = "id") String id) {
+
+		ApiResponse<DHDataType> apiResponse = configurationService.dataType(request, id);
+
+		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+	}
+
+	@PostMapping(value="/v1/configurations/datatypes", headers = "Accept=application/json", produces = "application/json")
+	public ResponseEntity<ApiResponse<DHDataType>> addDataType(HttpServletRequest request, @RequestBody DHDataType dhDataType) {
+
+		ApiResponse<DHDataType> apiResponse = configurationService.addDataType(request, dhDataType);
+
+		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+	}
+
+	@PutMapping(value="/v1/configurations/datatypes", headers="Accept=application/json", produces="application/json")
+	public ResponseEntity<ApiResponse<DHDataType>> updateProject(HttpServletRequest request, @RequestBody DHDataType dhDataType) {
+
+		ApiResponse<DHDataType> apiResponse = configurationService.updateDataType(request, dhDataType);
+
+		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+	}
+
+	@DeleteMapping(value="/v1/configurations/datatypes/{id}", headers="Accept=application/json", produces="application/json")
+	public ResponseEntity<ApiResponse<DHDataType>> deleteDataType(HttpServletRequest request, @PathVariable(name = "id") String id) {
+
+		ApiResponse<DHDataType> apiResponse = configurationService.deleteDataType(request, id);
+
+		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+	}
 }
