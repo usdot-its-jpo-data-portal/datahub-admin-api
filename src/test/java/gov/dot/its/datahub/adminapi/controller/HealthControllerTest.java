@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -27,7 +27,7 @@ import gov.dot.its.datahub.adminapi.testutils.TestUtils;
 @WebMvcTest(HealthController.class)
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets", uriHost = "example.com", uriPort = 3008, uriScheme = "http")
 @ComponentScan("gov.dot.its.datahub.adminapi.testutils")
-class HealthControllerTest {
+public class HealthControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -39,7 +39,7 @@ class HealthControllerTest {
 	private ObjectMapper objectMapper;
 
 	@Test
-	void testHealthCheck() throws Exception { // NOSONAR
+	public void testHealthCheck() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 

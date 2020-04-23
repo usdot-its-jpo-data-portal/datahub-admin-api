@@ -25,12 +25,14 @@ public class DataAsset {
 	private List<RelatedItemModel> related;
 	private Metrics metrics;
 	private List<String> dhProjects;
+	private List<String> dhDataTypes;
 
 	public DataAsset() {
 		this.tags = new ArrayList<>();
 		this.highlights = new HashMap<>();
 		this.related = new ArrayList<>();
 		this.dhProjects = new ArrayList<>();
+		this.dhDataTypes = new ArrayList<>();
 	}
 
 	public String getId() {
@@ -131,5 +133,12 @@ public class DataAsset {
 		this.dhProjects = dhProjects;
 	}
 
+	public List<String> getDhDataTypes() {
+		return dhDataTypes;
+	}
+
+	public void setDhDataTypes(List<String> dhDataTypes) {
+		this.dhDataTypes = dhDataTypes;
+	}
 
 }

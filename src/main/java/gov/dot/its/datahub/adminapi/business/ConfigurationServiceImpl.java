@@ -20,6 +20,7 @@ import gov.dot.its.datahub.adminapi.model.ApiError;
 import gov.dot.its.datahub.adminapi.model.ApiMessage;
 import gov.dot.its.datahub.adminapi.model.ApiResponse;
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
+import gov.dot.its.datahub.adminapi.model.DHDataType;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 import gov.dot.its.datahub.adminapi.utils.ApiUtils;
 
@@ -241,6 +242,160 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			return apiResponse;
+
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<List<DHDataType>> dataTypes(HttpServletRequest request) {
+		logger.info("Request: DataTypes");
+		final String RESPONSE_MSG = "Response: GET DataTypes. ";
+
+		ApiResponse<List<DHDataType>> apiResponse = new ApiResponse<>();
+		List<ApiError> errors = new ArrayList<>();
+
+		try {
+
+			List<DHDataType> dataTypes = configurationDao.getDataTypes();
+
+			if (dataTypes != null && !dataTypes.isEmpty()) {
+				apiResponse.setResponse(HttpStatus.OK, dataTypes, null, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+dataTypes.size());
+				return apiResponse;
+			}
+
+			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			return apiResponse;
+
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHDataType> dataType(HttpServletRequest request, String id) {
+		logger.info("Request: Get DataType by ID");
+		final String RESPONSE_MSG = "Response: GET DataType. ";
+
+		List<ApiError> errors = new ArrayList<>();
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		List<ApiMessage> messages = new ArrayList<>();
+
+		try {
+
+			DHDataType dataType = configurationDao.getDataTypeById(id);
+
+			if (dataType != null) {
+				apiResponse.setResponse(HttpStatus.OK, dataType, messages, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				return apiResponse;
+			}
+
+			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			return apiResponse;
+
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHDataType> addDataType(HttpServletRequest request, DHDataType dhDataType) {
+		logger.info("Request: Add DataType");
+		final String RESPONSE_MSG = "Response: POST DataType. ";
+
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		List<ApiError> errors = new ArrayList<>();
+		List<ApiMessage> messages = new ArrayList<>();
+
+		try {
+			dhDataType.setId(apiUtils.getUUID());
+			dhDataType.setLastModified(apiUtils.getCurrentUtc());
+			String result = configurationDao.addDataType(dhDataType);
+
+			if (result != null) {
+				messages.add(new ApiMessage(result));
+				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				return apiResponse;
+			}
+
+			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			return apiResponse;
+
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHDataType> updateDataType(HttpServletRequest request, DHDataType dhDataType) {
+		logger.info("Request: Update DataType");
+		final String RESPONSE_MSG = "Response: PUT DataType. ";
+
+		List<ApiError> errors = new ArrayList<>();
+		List<ApiMessage> messages = new ArrayList<>();
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+
+		try {
+			dhDataType.setLastModified(apiUtils.getCurrentUtc());
+			String result = configurationDao.updateDataType(dhDataType);
+
+			if (result != null) {
+				messages.add(new ApiMessage(result));
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
+				return apiResponse;
+			}
+
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
+			return apiResponse;
+
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHDataType> deleteDataType(HttpServletRequest request, String id) {
+		logger.info("Request: DELETE DataType");
+		final String RESPONSE_MSG = "Response: DELETE DataType. ";
+
+		ApiResponse<DHDataType> apiResponse = new ApiResponse<>();
+		List<ApiMessage> messages = new ArrayList<>();
+		List<ApiError> errors = new ArrayList<>();
+
+		try {
+
+			boolean result = configurationDao.deleteDataTypeById(id);
+
+			if (result) {
+
+				String msg = dataAssetsDao.removeDataType(id);
+				if (!StringUtils.isEmpty(msg)) {
+					messages.add(new ApiMessage(msg));
+				}
+
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				messages.add(new ApiMessage(id));
+				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
+				return apiResponse;
+			}
+
+			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
 			return apiResponse;
 
 

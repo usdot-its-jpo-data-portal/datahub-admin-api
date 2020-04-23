@@ -1,15 +1,14 @@
 # datahub-admin-api
 DataHub Admin API
-> Version: 1.0.0
+> Version: 1.1.0
 
 The Admin API of DataHub has the function to administer the metadata information (documents) for the DataHub. The API connect to an ElasticSearch storage system. The API will do actions on the _configurations_ and _dataassets_ indexes. 
 
 ## Change Log
 Changes related to the previous version.
 
-> Previous Version: none
-- Initial version.
-  - Support for Projects and DataAssets
+> Previous Version: 1.0.0
+- Support for DataTypes
 
 ## Usage
 Once the application is running on a configured port the API uses the standard REST verbs to manipulate the data.
@@ -23,7 +22,7 @@ Two sets of actions were defined to administer the data for each Elasticsearch i
 
 ---
 ## Header Token Validation
-The API is expecting to receive a TOKEN in the header under the name DHTOKEN. This value needs to be provided as part of the configuration of the API. Failing to provide the DHTOKEN will return in UNAUTHORIZED.
+The API is expecting to receive a TOKEN in the header under the name DHTOKEN. This value needs to be provided as part of the configuration of the API. Failing to provide the DHTOKEN will return in FORBIDDEN.
 
 ```
 HTTP/1.1 403 Forbidden
@@ -65,7 +64,7 @@ DHTOKEN: 123
 }
 ```
 
-### Update Repository
+### Update Project
 ```json
 PUT /api/v1/configurations/projects HTTP/1.1
 Content-Type: application/json
@@ -89,13 +88,63 @@ DHTOKEN: 123
  - URL: http://[host:port]/api/v1/repositories/{ID}
  - Content-Type: application/json
 
-
-### Delete Multiple Repositories
-
 ```
 DELETE /api/v1/configurations/projects/343f646a-6db0-47bc-8ccb-f54a9b8cc2a8 HTTP/1.1
 DHTOKEN: 123
 ```
+
+---
+
+## DataTypes
+The following entries are related to the DataTypes administration under the _configurations_.
+
+### List DataTypes
+
+```
+GET /api/v1/configurations/datatypes HTTP/1.1
+DHTOKEN: 123
+```
+
+### Add DataType
+```json
+POST /api/v1/configurations/datatypes HTTP/1.1
+Content-Type: application/json
+DHTOKEN: 123
+
+{
+  "id" : "efd3f449-5a3e-45f0-b3b6-ead5c324598d",
+  "name" : "DataType-1",
+  "description" : "Description for DataType 1",
+  "lastModified" : "2020-04-17T15:45:18.583+0000",
+  "isEnabled" : true
+}
+```
+
+### Update DataType
+```json
+PUT /api/v1/configurations/datatypes HTTP/1.1
+Content-Type: application/json
+DHTOKEN: 123
+
+{
+  "id" : "08dbc2d1-0dd7-4d90-b48e-76d76750bb3c",
+  "name" : "DataType-1",
+  "description" : "Description for DataType 1",
+  "lastModified" : "2020-04-17T15:45:18.678+0000",
+  "isEnabled" : true
+}
+```
+
+### Delete DataType
+
+```
+DELETE /api/v1/configurations/datatypes/50bc6272-a91b-4c16-b5c1-a42f6f596bdb HTTP/1.1
+DHTOKEN: 123
+```
+
+---
+## Data Assets
+The following entries are related to the DataAssets administration.
 
 ### List DataAssets
 
@@ -103,7 +152,6 @@ DHTOKEN: 123
 GET /api/v1/dataassets HTTP/1.1
 DHTOKEN: 123
 ```
-
 
 ### List DataAsset by ID
 
@@ -136,7 +184,8 @@ DHTOKEN: 123
     "pageViewsLastMonth" : 8,
     "pageViewsTotal" : 1025
   },
-  "dhProjects" : [ "298de0d6-6b61-409a-b2b9-16f062658a40", "e3a81572-1bdb-4a45-829a-aab719033a40" ]
+  "dhProjects" : [ "298de0d6-6b61-409a-b2b9-16f062658a40", "e3a81572-1bdb-4a45-829a-aab719033a40" ],
+  "dhDataTypes" : [ "a3130497-ed01-4bca-a5db-0e3ad9c30989", "600d02a4-f770-48ae-a998-692348aee539" ]
 }
 ```
 
@@ -150,7 +199,7 @@ The API requires the following environment variables
 |datahub.admin.api.es.port|mandatory||Sets the port that the target ElasticSearch is using.|
 |datahub.admin.api.es.scheme|mandatory||Sets the protocol scheme used by the target ElasticSearch (http or https)|
 |datahub.admin.api.security.token.name|optional|DHTOKEN|Token name for request authorization|
-|datahub.admin.api.security.token.key|optional||Expected Token value for request authorization|
+|datahub.admin.api.security.token.key|mandatory||Expected Token value for request authorization|
 |datahub.admin.api.configurations.index|mandatory|configurations|Configurations Index name.|
 |datahub.admin.api.configurations.default|mandatory|datahub-default-configuration|Configuration name to be use by the API.|
 |datahub.admin.api.es.dataassets.index|optional|dataassets|Index name in ElasticSearch that contains the DataAssets.|
@@ -167,11 +216,11 @@ The API requires the following environment variables
 The API is a Java application and can be executed updating the values of the following command template.
 
 ```bash
-sh -c java -Djava.security.egd=file:/dev/./urandom -jar /datahub-admin-api-1.0.0.jar"
+sh -c java -Djava.security.egd=file:/dev/./urandom -jar /datahub-admin-api-1.1.0.jar"
 ```
 It is important to setup the environment variables before to execute the application.
 
-The API documentation is embedded in the application as static html file, this can be accessed using the following URL template.
+The API documentation is embedded in the application as static html file, this can be accessed using the following URL template (DHTOKEN needs to be provided).
 
 ```bash
   http://[host:port]/api/index.html
@@ -200,7 +249,7 @@ The following command with the correct values for the environment variable will 
 ```bash
 docker run -p 3008:3008 --rm \
 -e "server.port=3008" \
--e "datahub.admin.api.token.key=[CHTOKEN]" \
+-e "datahub.admin.api.token.key=[DHTOKEN]" \
 -e "datahub.admin.api.es.host=[HOST]" \
 -e "datahub.admin.api.es.port=[PORT]" \
 -e "datahub.admin.api.es.scheme=[SCHEME]" \
@@ -212,6 +261,8 @@ docker run -p 3008:3008 --rm \
 ## Release History
 * 1.0.0
   * Initial version
+* 1.1.0
+  * Support for DataTypes
 
 
 ## Contact information

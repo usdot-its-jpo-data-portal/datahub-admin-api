@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import gov.dot.its.datahub.adminapi.model.ApiResponse;
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
+import gov.dot.its.datahub.adminapi.model.DHDataType;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 
 public interface ConfigurationService {
@@ -23,5 +24,15 @@ public interface ConfigurationService {
 	ApiResponse<DHProject> deleteProject(HttpServletRequest request, String id);
 
 	ApiResponse<List<String>> projectImages(HttpServletRequest request);
+
+	ApiResponse<List<DHDataType>> dataTypes(HttpServletRequest request);
+
+	ApiResponse<DHDataType> dataType(HttpServletRequest request, String id);
+
+	ApiResponse<DHDataType> addDataType(HttpServletRequest request, DHDataType dhDataType);
+
+	ApiResponse<DHDataType> updateDataType(HttpServletRequest request, DHDataType dhDataType);
+
+	ApiResponse<DHDataType> deleteDataType(HttpServletRequest request, String id);
 
 }
