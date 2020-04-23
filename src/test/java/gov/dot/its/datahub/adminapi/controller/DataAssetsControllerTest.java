@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -40,7 +40,7 @@ import gov.dot.its.datahub.adminapi.testutils.TestUtils;
 @WebMvcTest(DataAssetsController.class)
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets", uriHost = "example.com", uriPort = 3008, uriScheme = "http")
 @ComponentScan("gov.dot.its.datahub.adminapi.testutils")
-class DataAssetsControllerTest {
+public class DataAssetsControllerTest {
 
 	private static final String URL_DATAASSETS_TEMPLATE = "%s/v1/dataassets";
 	private static final String SECURITY_TOKEN_KEY = "datahub.admin.api.security.token.key";
@@ -68,7 +68,7 @@ class DataAssetsControllerTest {
 	}
 
 	@Test
-	void testDataassets() throws Exception { // NOSONAR
+	public void testDataassets() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 
@@ -95,7 +95,7 @@ class DataAssetsControllerTest {
 	}
 
 	@Test
-	void testDataasset() throws Exception { // NOSONAR
+	public void testDataasset() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("GET");
 
@@ -122,7 +122,7 @@ class DataAssetsControllerTest {
 	}
 
 	@Test
-	void testUpdateDataAsset() throws Exception { // NOSONAR
+	public void testUpdateDataAsset() throws Exception { // NOSONAR
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod("PUT");
 
@@ -173,6 +173,12 @@ class DataAssetsControllerTest {
 			dhProjects.add(UUID.randomUUID().toString());
 		}
 		dataAsset.setDhProjects(dhProjects);
+
+		List<String> dhDataTypes = new ArrayList<>();
+		for(int j = 0; j < 2; j++) {
+			dhDataTypes.add(UUID.randomUUID().toString());
+		}
+		dataAsset.setDhDataTypes(dhDataTypes);
 
 		dataAsset.setDhSourceName("source-name");
 		dataAsset.setEsScore(1F);

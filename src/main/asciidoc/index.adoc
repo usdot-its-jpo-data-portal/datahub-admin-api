@@ -5,22 +5,21 @@
 = ITS DataHub
 
 == Admin API
-`version: 1.0.0`
+`version: 1.1.0`
 
 The Admin API of DataHub has the function to administer the metadata information for the DataHub system. The API connect to an https://www.elastic.co/products/enterprise-search[ElasticSearch] storage system
 
 === Change Log
 Changes related to the previous version.
 
-`Previous version: none`
+`Previous version: 1.0.0`
 
-* Initial Version
-** Support for : Configurations and DataAssets
+* Support for Data Types categories
 
 
 == Header token validation
 The API is expecting to receive a TOKEN in the header under the name DHTOKEN. This value needs to be provided as part of the configuration of the API.
-Failing to provide the CHTOKEN will return in UNAUTHORIZED.
+Failing to provide the DHTOKEN will return in FORBIDDEN.
 
 include::{snippets}/api/auth/http-response.adoc[]
 
@@ -37,6 +36,7 @@ The Configuration information is presented through an structure (DHConfiguration
 |id   |String   |Unique hash ID
 |name |String...|Configuration name
 |projects   |List<**DHProject**>   |List of Projects
+|dataTypes|List<**DHDataType**>|List of DataTypes
 |===
 
 *DHProject*
@@ -52,6 +52,18 @@ The Configuration information is presented through an structure (DHConfiguration
 |isPopular|Boolean|Flag to make a Project popular or not
 |orderPopular|Long|Order in case of the Project is flagged as popular.
 |imageFileName|String|Image name in case of the Project is popular.
+|===
+
+*DHDataType*
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|id   |String   |Unique Project ID
+|name |String   |Name given to the DataType
+|description|String|DataType description
+|isEnabled|Boolean|Flag to enable/disable a DataType
+|lastModified|Date|Last time that the DataType was modified
 |===
 
 
@@ -144,6 +156,64 @@ include::{snippets}/api/v1/configurations/projects/images/curl-request.adoc[]
 include::{snippets}/api/v1/configurations/projects/images/http-response.adoc[]
 
 
+=== List DataTypes
+Get list of DataTypes
+
+==== Request
+include::{snippets}/api/v1/configurations/datatypes/get/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/datatypes/get/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/datatypes/get/http-response.adoc[]
+
+
+=== Add DataType
+Add a DataType using the POST verb. 
+
+==== Request
+include::{snippets}/api/v1/configurations/datatypes/post/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/datatypes/post/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/datatypes/post/http-response.adoc[]
+
+
+=== Update DataType
+Update a DataType using the PUT verb.
+
+==== Request
+include::{snippets}/api/v1/configurations/datatypes/put/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/datatypes/put/curl-request.adoc[]
+
+==== Response
+
+include::{snippets}/api/v1/configurations/datatypes/put/http-response.adoc[]
+
+
+=== Delete DataType
+Delete a DataType using the DELETE verb.
+
+==== Request
+include::{snippets}/api/v1/configurations/datatypes/delete/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/datatypes/delete/curl-request.adoc[]
+
+==== Response
+
+include::{snippets}/api/v1/configurations/datatypes/delete/http-response.adoc[]
+
+
 == DataAssets
 
 DataAssets information is presented through the usage of a *DataAsset* structure.
@@ -162,14 +232,15 @@ This API allows to list the available DataAssets and update the "dhProjects" pro
 |*lastUpdate*   |Timestamp   |Last date and time that the data asset was updated.
 |*tags*   |List<String>   |List of Strings containing the tags.
 |*sourceUrl*   |String   |Url to the data asset data/site.
-|*dhId*   |String   |Internal DataHub ID to avoid collitions between data assets from different sources.
+|*dhId*   |String   |Internal DataHub ID to avoid collisions between data assets from different sources.
 |*dhLastUpdate*   |Timestamp   |Last time that record was update by the DataHub ingestion system.
 |*dhSourceName*   |String   |Data source identification.
 |*highlights*   |Map<String,List<String>>   |In the case of search this field contains the fragments where the search word/phrase was found.
 |*esScore*   |Float   |Contains the Elasticsearch score value after a search is executed.
 |*related*   |List<RelatedItemModel>   |List of related CodeHub items
 |*metrics*   |**Metrics**   |Contains the metrics values for the current DataAsset.
-|*dhProjects*|List<String>|List of Project IDs that the DataAsset belong to.
+|*dhProjects* |List<String>|List of Project IDs that the DataAsset belongs to.
+|*dhDataTypes* |List<String>|List of DataType IDs that the DataAsset belongs to.
 |===
 
 === RelatedItemModel

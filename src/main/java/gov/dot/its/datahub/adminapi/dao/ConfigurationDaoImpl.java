@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
+import gov.dot.its.datahub.adminapi.model.DHDataType;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 
 @Repository
@@ -196,6 +197,124 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 			images.set(i, String.format("%s/%s", this.imagesPath, images.get(i)));
 		}
 		return images;
+	}
+
+	@Override
+	public List<DHDataType> getDataTypes() throws IOException {
+		GetRequest getRequest = new GetRequest(configurationsIndex, "_doc", configurationId);
+		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+		if (!getResponse.isExists()) {
+			return new ArrayList<>();
+		}
+
+		Map<String, Object> sourceMap = getResponse.getSourceAsMap();
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		DHConfiguration configuration = mapper.convertValue(sourceMap, DHConfiguration.class);
+
+		return configuration.getDataTypes();
+	}
+
+	@Override
+	public DHDataType getDataTypeById(String id) throws IOException {
+		DHConfiguration configuration = getConfiguration();
+		if (configuration == null) {
+			return null;
+		}
+
+		for(DHDataType dataType: configuration.getDataTypes()) {
+			if (dataType.getId().equalsIgnoreCase(id)) {
+				return dataType;
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public String addDataType(DHDataType dhDataType) throws IOException {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> jsonData = objectMapper.convertValue(dhDataType, Map.class);
+		Map<String, Object> param = new HashMap<>();
+		param.put("dt", jsonData);
+
+		String scriptCode = ""
+				+ "int found_index = -1;"
+				+ "if (ctx._source.dataTypes.empty) {"
+				+ "  ctx._source.dataTypes = [];"
+				+ "}"
+				+ "for(int i=0;i<ctx._source.dataTypes.length;i++) {"
+				+ "  if(ctx._source.dataTypes[i].id == params.dt.id){"
+				+ "    found_index = i;"
+				+ "    break;"
+				+ "  }"
+				+ "}"
+				+ "if (found_index < 0) {"
+				+ "  ctx._source.dataTypes.add(params.dt);"
+				+ "}";
+
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		updateRequest.script(inline);
+
+		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+
+		return updateResponse.getResult().name();
+	}
+
+	@Override
+	public String updateDataType(DHDataType dhDataType) throws IOException {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> jsonData = objectMapper.convertValue(dhDataType, Map.class);
+		Map<String, Object> param = new HashMap<>();
+		param.put("dt", jsonData);
+
+		String scriptCode = ""
+				+ "if (ctx._source.dataTypes != null) {"
+				+ "  for(int i=0;i<ctx._source.dataTypes.length;i++) {"
+				+ "    if(ctx._source.dataTypes[i].id == params.dt.id){"
+				+ "      ctx._source.dataTypes[i] = params.dt"
+				+ "    }"
+				+ "  }"
+				+ "}";
+
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		updateRequest.script(inline);
+
+		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+
+		return updateResponse.getResult().name();
+	}
+
+	@Override
+	public boolean deleteDataTypeById(String id) throws IOException {
+		Map<String, Object> param = new HashMap<>();
+		param.put("dataTypeId", id);
+
+		String scriptCode = ""
+				+ "int remove_index = -1;"
+				+ "for(int i=0;i<ctx._source.dataTypes.length;i++) {"
+				+ "  if(ctx._source.dataTypes[i].id == params.dataTypeId){"
+				+ "    remove_index = i;"
+				+ "    break;"
+				+ "  }"
+				+ "}"
+				+ "if (remove_index >= 0) {"
+				+ "  ctx._source.dataTypes.remove(remove_index);"
+				+ "}";
+
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		updateRequest.script(inline);
+
+		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+
+		return updateResponse.getResult().name() != null;
 	}
 
 }

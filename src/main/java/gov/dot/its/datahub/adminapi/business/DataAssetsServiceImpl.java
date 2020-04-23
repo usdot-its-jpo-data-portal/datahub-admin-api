@@ -100,7 +100,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 		try {
 			dataAsset.setDhLastUpdate(apiUtils.getCurrentUtcTimestamp());
-			String result = dataAssetsDao.updateProject(dataAsset);
+			String result = dataAssetsDao.updateDataAsset(dataAsset);
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));

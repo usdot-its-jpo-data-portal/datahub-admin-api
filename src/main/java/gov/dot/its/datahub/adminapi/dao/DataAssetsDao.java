@@ -11,8 +11,10 @@ public interface DataAssetsDao {
 
 	DataAsset getDataAssetById(String id) throws IOException;
 
-	String updateProject(DataAsset dataAsset) throws IOException;
+	String updateDataAsset(DataAsset dataAsset) throws IOException;
 
 	String removeProject(String id) throws IOException;
+
+	String removeDataType(String id) throws IOException;
 
 }

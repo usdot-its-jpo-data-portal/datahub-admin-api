@@ -7,9 +7,11 @@ public class DHConfiguration {
 	private String id;
 	private String name;
 	private List<DHProject> projects;
+	private List<DHDataType> dataTypes;
 
 	public DHConfiguration() {
 		this.projects = new ArrayList<>();
+		this.dataTypes = new ArrayList<>();
 	}
 
 	public String getId() {
@@ -36,5 +38,12 @@ public class DHConfiguration {
 		this.projects = projects;
 	}
 
+	public List<DHDataType> getDataTypes() {
+		return dataTypes;
+	}
+
+	public void setDataTypes(List<DHDataType> dataTypes) {
+		this.dataTypes = dataTypes;
+	}
 
 }
