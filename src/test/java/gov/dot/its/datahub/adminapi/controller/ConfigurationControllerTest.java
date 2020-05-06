@@ -38,6 +38,7 @@ import gov.dot.its.datahub.adminapi.business.ConfigurationService;
 import gov.dot.its.datahub.adminapi.model.ApiResponse;
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
 import gov.dot.its.datahub.adminapi.model.DHDataType;
+import gov.dot.its.datahub.adminapi.model.DHEngagementPopup;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 import gov.dot.its.datahub.adminapi.testutils.TestUtils;
 
@@ -50,6 +51,7 @@ public class ConfigurationControllerTest {
 	private static final String URL_PROJECTS_TEMPLATE = "%s/v1/configurations/projects";
 	private static final String URL_DATATYPES_TEMPLATE = "%s/v1/configurations/datatypes";
 	private static final String SECURITY_TOKEN_KEY = "datahub.admin.api.security.token.key";
+	private static final String URL_ENGAGEMENTPOPUP_TEMPLATE = "%s/v1/configurations/engagementpopups";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -429,17 +431,131 @@ public class ConfigurationControllerTest {
 		assertTrue(responseApi.getResult() != null);
 	}
 
+	@Test
+	public void testEngagementPopups() throws Exception { //NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("GET");
+
+		DHConfiguration configuration = this.getFakeConfiguration();
+
+		ApiResponse<List<DHEngagementPopup>> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, configuration.getEngagementPopups(), null, null, request);
+
+		when(configurationService.engagementpopups(any(HttpServletRequest.class))).thenReturn(apiResponse);
+		
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/get", null);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<List<DHEngagementPopup>>> valueType = new TypeReference<ApiResponse<List<DHEngagementPopup>>>(){};
+		ApiResponse<List<DHEngagementPopup>> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertTrue(responseApi.getResult() != null);
+		assertTrue(responseApi.getErrors() == null);
+		assertTrue(responseApi.getMessages() == null);
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+	}
+
+	@Test
+	public void testAddEngagementPopup() throws Exception { //NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("POST");
+
+		DHEngagementPopup engagementPopup = this.getFakeEngagementPopup(1);
+
+		ApiResponse<DHEngagementPopup> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, engagementPopup, null, null, request);
+
+		when(configurationService.addEngagementPopup(any(HttpServletRequest.class),any(DHEngagementPopup.class))).thenReturn(apiResponse);
+
+		String engagementPopupStr = objectMapper.writeValueAsString(engagementPopup);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/post", engagementPopupStr);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHEngagementPopup>> valueType = new TypeReference<ApiResponse<DHEngagementPopup>>(){};
+		ApiResponse<DHEngagementPopup> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertTrue(responseApi.getMessages() == null);
+		assertTrue(responseApi.getErrors() == null);
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(responseApi.getResult() != null);
+	}
+
+	@Test
+	public void testUpdateEngagementPopup() throws Exception { //NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("PUT");
+
+		DHEngagementPopup engagementPopup = this.getFakeEngagementPopup(1);
+
+		ApiResponse<DHEngagementPopup> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, engagementPopup, null, null, request);
+
+		when(configurationService.updateEngagementPopup(any(HttpServletRequest.class),any(DHEngagementPopup.class))).thenReturn(apiResponse);
+
+		String engagementPopupStr = objectMapper.writeValueAsString(engagementPopup);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+		URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/put", engagementPopupStr);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHEngagementPopup>> valueType = new TypeReference<ApiResponse<DHEngagementPopup>>(){};
+		ApiResponse<DHEngagementPopup> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertTrue(responseApi.getMessages() == null);
+		assertTrue(responseApi.getResult() != null);
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(responseApi.getErrors() == null);
+	}
+
+	@Test
+	public void testDeleteEngagementPopup() throws Exception { //NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("DELETE");
+
+		DHEngagementPopup engagementPopup = this.getFakeEngagementPopup(1);
+
+		ApiResponse<DHEngagementPopup> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, engagementPopup, null, null, request);
+
+		when(configurationService.deleteEngagementPopup(any(HttpServletRequest.class), any(String.class))).thenReturn(apiResponse);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+		URL_ENGAGEMENTPOPUP_TEMPLATE + "/" + engagementPopup.getId(), "api/v1/configurations/engagementpopups/delete", null);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		TypeReference<ApiResponse<DHEngagementPopup>> valueType = new TypeReference<ApiResponse<DHEngagementPopup>>(){};
+		ApiResponse<DHEngagementPopup> responseApi = objectMapper.readValue(objString, valueType);
+
+		assertTrue(responseApi.getResult() != null);
+		assertTrue(responseApi.getErrors() == null);
+		assertTrue(responseApi.getResult() instanceof DHEngagementPopup);
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(responseApi.getMessages() == null);
+	}
+
+
 	private DHConfiguration getFakeConfiguration() {
 		DHConfiguration dhConfiguration = new DHConfiguration();
 		dhConfiguration.setId("datahub-default-configuration");
 		dhConfiguration.setName("Datahub Default Configuration");
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			DHProject project = getFakeProject(i);
 			dhConfiguration.getProjects().add(project);
 
 			DHDataType dataType = getFakeDataType(i);
 			dhConfiguration.getDataTypes().add(dataType);
+
+			DHEngagementPopup engagementPopup = getFakeEngagementPopup(i);
+			dhConfiguration.getEngagementPopups().add(engagementPopup);
 		}
 
 		return dhConfiguration;
@@ -466,6 +582,19 @@ public class ConfigurationControllerTest {
 		dataType.setDescription(String.format("Description for DataType %s", index));
 		dataType.setLastModified(new Date());
 		return dataType;
+	}
+
+	private DHEngagementPopup getFakeEngagementPopup(int index) {
+		DHEngagementPopup engagementPopup = new DHEngagementPopup();
+		engagementPopup.setActive(index == 1);
+		engagementPopup.setContent(String.format("content-%s", index));
+		engagementPopup.setControlsColor("black");
+		engagementPopup.setControlsShadow("white");
+		engagementPopup.setDescription(String.format("description %s", index));
+		engagementPopup.setId(UUID.randomUUID().toString());
+		engagementPopup.setLastModified(new Date());
+		engagementPopup.setName(String.format("EngagementPopup-%s", index));
+		return engagementPopup;
 	}
 
 }
