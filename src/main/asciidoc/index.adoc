@@ -1,20 +1,20 @@
 :toc: left
-:toclevels: 4
+:toclevels: 2
 :snippets: ../../../target/generated-snippets
 
 = ITS DataHub
 
 == Admin API
-`version: 1.1.0`
+`version: 1.2.0`
 
 The Admin API of DataHub has the function to administer the metadata information for the DataHub system. The API connect to an https://www.elastic.co/products/enterprise-search[ElasticSearch] storage system
 
 === Change Log
 Changes related to the previous version.
 
-`Previous version: 1.0.0`
+`Previous version: 1.1.0`
 
-* Support for Data Types categories
+* Support for Engagement Popups
 
 
 == Header token validation
@@ -37,6 +37,7 @@ The Configuration information is presented through an structure (DHConfiguration
 |name |String...|Configuration name
 |projects   |List<**DHProject**>   |List of Projects
 |dataTypes|List<**DHDataType**>|List of DataTypes
+|engagementPopups|List<**DGEngagementPopup**>|List of Engagement Popups
 |===
 
 *DHProject*
@@ -64,6 +65,21 @@ The Configuration information is presented through an structure (DHConfiguration
 |description|String|DataType description
 |isEnabled|Boolean|Flag to enable/disable a DataType
 |lastModified|Date|Last time that the DataType was modified
+|===
+
+*DHEngagementPopup*
+[options="header",cols="1,1,2"]
+|===
+|Name   |Type   |Description
+//-------------
+|id   |String   |Unique Project ID
+|name |String   |Name given to the Engagement Popup
+|description|String|DataType description
+|isActive|Boolean|Flag to make an Engagement Popup active or not
+|lastModified|Date|Last time that the DataType was modified
+|content|String|Engagement Popup HTML/CSS content
+|controlsColor|String|Color name for common controls
+|controlsShadow|String|Color name for the shadow of common controls
 |===
 
 
@@ -212,6 +228,63 @@ include::{snippets}/api/v1/configurations/datatypes/delete/curl-request.adoc[]
 ==== Response
 
 include::{snippets}/api/v1/configurations/datatypes/delete/http-response.adoc[]
+
+=== List Engagement Popups
+Get list of Engagement Popups
+
+==== Request
+include::{snippets}/api/v1/configurations/engagementpopups/get/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/engagementpopups/get/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/engagementpopups/get/http-response.adoc[]
+
+
+=== Add Engagement Popup
+Add a Engagement Popup using the POST verb. 
+
+==== Request
+include::{snippets}/api/v1/configurations/engagementpopups/post/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/engagementpopups/post/curl-request.adoc[]
+
+
+==== Response
+
+include::{snippets}/api/v1/configurations/engagementpopups/post/http-response.adoc[]
+
+
+=== Update Engagement Popup
+Update a Engagement Popup using the PUT verb.
+
+==== Request
+include::{snippets}/api/v1/configurations/engagementpopups/put/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/engagementpopups/put/curl-request.adoc[]
+
+==== Response
+
+include::{snippets}/api/v1/configurations/engagementpopups/put/http-response.adoc[]
+
+
+=== Delete Engagement Popup
+Delete a Engagement Popup using the DELETE verb.
+
+==== Request
+include::{snippets}/api/v1/configurations/engagementpopups/delete/http-request.adoc[]
+
+===== cURL Sample
+include::{snippets}/api/v1/configurations/engagementpopups/delete/curl-request.adoc[]
+
+==== Response
+
+include::{snippets}/api/v1/configurations/engagementpopups/delete/http-response.adoc[]
 
 
 == DataAssets

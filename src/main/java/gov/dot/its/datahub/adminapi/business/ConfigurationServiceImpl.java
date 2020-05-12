@@ -21,6 +21,7 @@ import gov.dot.its.datahub.adminapi.model.ApiMessage;
 import gov.dot.its.datahub.adminapi.model.ApiResponse;
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
 import gov.dot.its.datahub.adminapi.model.DHDataType;
+import gov.dot.its.datahub.adminapi.model.DHEngagementPopup;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 import gov.dot.its.datahub.adminapi.utils.ApiUtils;
 
@@ -54,7 +55,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (configuration != null) {
 				apiResponse.setResponse(HttpStatus.OK, configuration, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
 				return apiResponse;
 			}
 
@@ -62,9 +63,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -82,7 +83,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (projects != null && !projects.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, projects, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+projects.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + projects.size());
 				return apiResponse;
 			}
 
@@ -90,9 +91,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -111,7 +112,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (project != null) {
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
 				return apiResponse;
 			}
 
@@ -119,14 +120,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
 	@Override
-	public ApiResponse<DHProject> addProject(HttpServletRequest request, DHProject chProject) {
+	public ApiResponse<DHProject> addProject(HttpServletRequest request, DHProject project) {
 		logger.info("Request: Add Project");
 		final String RESPONSE_MSG = "Response: POST Project. ";
 
@@ -135,14 +136,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		List<ApiMessage> messages = new ArrayList<>();
 
 		try {
-			chProject.setId(apiUtils.getUUID());
-			chProject.setLastModified(apiUtils.getCurrentUtc());
-			String result = configurationDao.addProject(chProject);
+			project.setId(apiUtils.getUUID());
+			project.setLastModified(apiUtils.getCurrentUtc());
+			String result = configurationDao.addProject(project);
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				apiResponse.setResponse(HttpStatus.OK, chProject, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
 				return apiResponse;
 			}
 
@@ -150,14 +151,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
 	@Override
-	public ApiResponse<DHProject> updateProject(HttpServletRequest request, DHProject chProject) {
+	public ApiResponse<DHProject> updateProject(HttpServletRequest request, DHProject project) {
 		logger.info("Request: Update Project");
 		final String RESPONSE_MSG = "Response: PUT Project. ";
 
@@ -166,13 +167,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		ApiResponse<DHProject> apiResponse = new ApiResponse<>();
 
 		try {
-			chProject.setLastModified(apiUtils.getCurrentUtc());
-			String result = configurationDao.updateProject(chProject);
+			project.setLastModified(apiUtils.getCurrentUtc());
+			String result = configurationDao.updateProject(project);
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
-				apiResponse.setResponse(HttpStatus.OK, chProject, messages, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
+				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
 				return apiResponse;
 			}
 
@@ -180,9 +181,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -208,7 +209,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 				messages.add(new ApiMessage(id));
 				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
 				return apiResponse;
 			}
 
@@ -216,9 +217,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -236,7 +237,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (images != null && !images.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, images, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+images.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + images.size());
 				return apiResponse;
 			}
 
@@ -244,9 +245,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -264,7 +265,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (dataTypes != null && !dataTypes.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, dataTypes, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+dataTypes.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + dataTypes.size());
 				return apiResponse;
 			}
 
@@ -272,9 +273,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -293,7 +294,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (dataType != null) {
 				apiResponse.setResponse(HttpStatus.OK, dataType, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
 				return apiResponse;
 			}
 
@@ -301,9 +302,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -324,7 +325,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result != null) {
 				messages.add(new ApiMessage(result));
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
 				return apiResponse;
 			}
 
@@ -332,9 +333,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -353,7 +354,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
 				return apiResponse;
 			}
@@ -362,9 +363,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
-
-		} catch(ElasticsearchStatusException | IOException e) {
-			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
 		}
 	}
 
@@ -388,9 +389,126 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 					messages.add(new ApiMessage(msg));
 				}
 
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
 				messages.add(new ApiMessage(id));
 				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
+				return apiResponse;
+			}
+
+			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			return apiResponse;
+
+		} catch (ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null,
+					apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<List<DHEngagementPopup>> engagementpopups(HttpServletRequest request) {
+		logger.info("Request: Engagement Popups");
+		final String RESPONSE_MSG = "Response: GET Engagement Popups. ";
+
+		ApiResponse<List<DHEngagementPopup>> apiResponse = new ApiResponse<>();
+		List<ApiError> errors = new ArrayList<>();
+
+		try {
+
+			List<DHEngagementPopup> engagementPopups = configurationDao.getEngagementPopups();
+
+			if (engagementPopups != null && !engagementPopups.isEmpty()) {
+				apiResponse.setResponse(HttpStatus.OK, engagementPopups, null, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+engagementPopups.size());
+				return apiResponse;
+			}
+
+			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			return apiResponse;
+
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHEngagementPopup> addEngagementPopup(HttpServletRequest request, DHEngagementPopup cdEngagementPopup) {
+		logger.info("Request: POST Engagement Popup");
+		final String RESPONSE_MSG = "Response: POST Engagement Popup. ";
+
+		List<ApiError> errors = new ArrayList<>();
+		List<ApiMessage> messages = new ArrayList<>();
+		ApiResponse<DHEngagementPopup> apiResponse = new ApiResponse<>();
+
+		try {
+			cdEngagementPopup.setId(apiUtils.getUUID());
+			cdEngagementPopup.setLastModified(apiUtils.getCurrentUtc());
+			String result = configurationDao.addEngagementPopup(cdEngagementPopup);
+
+			if (result != null) {
+				messages.add(new ApiMessage(result));
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				apiResponse.setResponse(HttpStatus.OK, cdEngagementPopup, messages, null, request);
+				return apiResponse;
+			}
+
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
+			return apiResponse;
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHEngagementPopup> updateEngagementPopup(HttpServletRequest request, DHEngagementPopup engagementPopup) {
+		logger.info("Request: Update Engagement Popup");
+		final String RESPONSE_MSG = "Response: PUT Engagement Popup. ";
+
+		List<ApiError> errors = new ArrayList<>();
+		List<ApiMessage> messages = new ArrayList<>();
+		ApiResponse<DHEngagementPopup> apiResponse = new ApiResponse<>();
+
+		try {
+			engagementPopup.setLastModified(apiUtils.getCurrentUtc());
+			String result = configurationDao.updateEngagementPopup(engagementPopup);
+
+			if (result != null) {
+				messages.add(new ApiMessage(result));
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				apiResponse.setResponse(HttpStatus.OK, engagementPopup, messages, null, request);
+				return apiResponse;
+			}
+
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
+			return apiResponse;
+
+		} catch(ElasticsearchStatusException | IOException e) {
+			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
+		}
+	}
+
+	@Override
+	public ApiResponse<DHEngagementPopup> deleteEngagementPopup(HttpServletRequest request, String id) {
+		logger.info("Request: DELETE Engagement PopUp");
+		final String RESPONSE_MSG = "Response: DELETE Engagement Popup. ";
+
+		ApiResponse<DHEngagementPopup> apiResponse = new ApiResponse<>();
+		List<ApiMessage> messages = new ArrayList<>();
+		List<ApiError> errors = new ArrayList<>();
+
+		try {
+
+			boolean result = configurationDao.removeEngagementPopup(id);
+
+			if (result) {
+				messages.add(new ApiMessage(id));
+				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
 				return apiResponse;
 			}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
 import gov.dot.its.datahub.adminapi.model.DHDataType;
+import gov.dot.its.datahub.adminapi.model.DHEngagementPopup;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 
 public interface ConfigurationDao {
@@ -32,5 +33,13 @@ public interface ConfigurationDao {
 	String updateDataType(DHDataType dhDataType) throws IOException;
 
 	boolean deleteDataTypeById(String id) throws IOException;
+
+	List<DHEngagementPopup> getEngagementPopups() throws IOException;
+
+	String addEngagementPopup(DHEngagementPopup engagementPopup) throws IOException;
+
+	String updateEngagementPopup(DHEngagementPopup engagementPopup) throws IOException;
+
+	boolean removeEngagementPopup(String id) throws IOException;
 
 }

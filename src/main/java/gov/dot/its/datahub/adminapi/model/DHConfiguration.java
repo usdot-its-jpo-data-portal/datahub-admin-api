@@ -8,10 +8,12 @@ public class DHConfiguration {
 	private String name;
 	private List<DHProject> projects;
 	private List<DHDataType> dataTypes;
+	private List<DHEngagementPopup> engagementPopups;
 
 	public DHConfiguration() {
 		this.projects = new ArrayList<>();
 		this.dataTypes = new ArrayList<>();
+		this.engagementPopups = new ArrayList<>();
 	}
 
 	public String getId() {
@@ -46,4 +48,11 @@ public class DHConfiguration {
 		this.dataTypes = dataTypes;
 	}
 
+	public List<DHEngagementPopup> getEngagementPopups() {
+		return engagementPopups;
+	}
+
+	public void setEngagementPopups(List<DHEngagementPopup> engagementPopups) {
+		this.engagementPopups = engagementPopups;
+	}	
 }
