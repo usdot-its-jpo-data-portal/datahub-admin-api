@@ -1,14 +1,14 @@
 # datahub-admin-api
 DataHub Admin API
-> Version: 1.1.0
+> Version: 1.2.0
 
 The Admin API of DataHub has the function to administer the metadata information (documents) for the DataHub. The API connect to an ElasticSearch storage system. The API will do actions on the _configurations_ and _dataassets_ indexes. 
 
 ## Change Log
 Changes related to the previous version.
 
-> Previous Version: 1.0.0
-- Support for DataTypes
+> Previous Version: 1.1.0
+- Support for Engagement Popups
 
 ## Usage
 Once the application is running on a configured port the API uses the standard REST verbs to manipulate the data.
@@ -143,6 +143,61 @@ DHTOKEN: 123
 ```
 
 ---
+
+## Engagement Popup
+The following entries are related to the Engagement Popup administration under the _configurations_.
+
+### List Engagement Popups
+
+```
+GET /api/v1/configurations/engagementpopups HTTP/1.1
+DHTOKEN: 123
+```
+
+### Add Engagement Popup
+```json
+POST /api/v1/configurations/engagementpopups HTTP/1.1
+Content-Type: application/json
+DHTOKEN: 123
+
+{
+  "id" : null,
+  "name" : "EngagementPopup-1",
+  "description" : "description 1",
+  "lastModified" : "2020-05-06T16:03:43.474+0000",
+  "content" : "content-1",
+  "controlsColor" : "black",
+  "controlsShadow" : "white",
+  "isActive" : true
+}
+```
+
+### Update Engagement Popup
+```json
+PUT /api/v1/configurations/engagementpopups HTTP/1.1
+Content-Type: application/json
+DHTOKEN: 123
+
+{
+  "id" : "3bb0fb6f-144d-419c-bf4d-dacd962e833d",
+  "name" : "EngagementPopup-1",
+  "description" : "description 1",
+  "lastModified" : "2020-05-06T16:03:43.352+0000",
+  "content" : "content-1",
+  "controlsColor" : "black",
+  "controlsShadow" : "white",
+  "isActive" : true
+}
+```
+
+### Delete Engagement Popup
+
+```
+DELETE /api/v1/configurations/engagementpopups/dd13fe91-5fb1-46c3-b653-f068bb50053c HTTP/1.1
+DHTOKEN: 123
+```
+
+---
 ## Data Assets
 The following entries are related to the DataAssets administration.
 
@@ -216,7 +271,7 @@ The API requires the following environment variables
 The API is a Java application and can be executed updating the values of the following command template.
 
 ```bash
-sh -c java -Djava.security.egd=file:/dev/./urandom -jar /datahub-admin-api-1.1.0.jar"
+sh -c java -Djava.security.egd=file:/dev/./urandom -jar /datahub-admin-api-1.2.0.jar"
 ```
 It is important to setup the environment variables before to execute the application.
 
@@ -263,6 +318,8 @@ docker run -p 3008:3008 --rm \
   * Initial version
 * 1.1.0
   * Support for DataTypes
+* 1.2.0
+  * Support for Engagement Popups
 
 
 ## Contact information

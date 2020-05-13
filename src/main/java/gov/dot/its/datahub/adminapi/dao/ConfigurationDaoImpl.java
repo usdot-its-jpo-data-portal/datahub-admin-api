@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.dot.its.datahub.adminapi.model.DHConfiguration;
 import gov.dot.its.datahub.adminapi.model.DHDataType;
+import gov.dot.its.datahub.adminapi.model.DHEngagementPopup;
 import gov.dot.its.datahub.adminapi.model.DHProject;
 
 @Repository
@@ -93,7 +94,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 			return null;
 		}
 
-		for(DHProject project: configuration.getProjects()) {
+		for (DHProject project : configuration.getProjects()) {
 			if (project.getId().equalsIgnoreCase(id)) {
 				return project;
 			}
@@ -124,7 +125,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  ctx._source.projects.add(params.pro);"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
 		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
 		updateRequest.script(inline);
@@ -150,7 +151,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  }"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
 		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
 		updateRequest.script(inline);
@@ -177,7 +178,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  ctx._source.projects.remove(remove_index);"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
 		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
 		updateRequest.script(inline);
@@ -191,9 +192,10 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 	public List<String> getProjectImages() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
-		TypeReference<List<String>> typeRef= new TypeReference<List<String>>() {};
+		TypeReference<List<String>> typeRef = new TypeReference<List<String>>() {
+		};
 		List<String> images = mapper.readValue(new URL(this.imagesList), typeRef);
-		for(int i=0; i<images.size(); i++) {
+		for (int i = 0; i < images.size(); i++) {
 			images.set(i, String.format("%s/%s", this.imagesPath, images.get(i)));
 		}
 		return images;
@@ -223,7 +225,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 			return null;
 		}
 
-		for(DHDataType dataType: configuration.getDataTypes()) {
+		for (DHDataType dataType : configuration.getDataTypes()) {
 			if (dataType.getId().equalsIgnoreCase(id)) {
 				return dataType;
 			}
@@ -254,7 +256,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  ctx._source.dataTypes.add(params.dt);"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
 		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
 		updateRequest.script(inline);
@@ -280,7 +282,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  }"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
 		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
 		updateRequest.script(inline);
@@ -307,7 +309,111 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  ctx._source.dataTypes.remove(remove_index);"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS,scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
+
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		updateRequest.script(inline);
+
+		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+
+		return updateResponse.getResult().name() != null;
+	}
+
+	@Override
+	public List<DHEngagementPopup> getEngagementPopups() throws IOException {
+		GetRequest getRequest = new GetRequest(configurationsIndex, "_doc", configurationId);
+		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+		if (!getResponse.isExists()) {
+			return new ArrayList<>();
+		}
+
+		Map<String, Object> sourceMap = getResponse.getSourceAsMap();
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		DHConfiguration configuration = mapper.convertValue(sourceMap, DHConfiguration.class);
+
+		return configuration.getEngagementPopups();
+	}
+
+	@Override
+	public String addEngagementPopup(DHEngagementPopup engagementPopup) throws IOException {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> jsonData = objectMapper.convertValue(engagementPopup, Map.class);
+		Map<String, Object> param = new HashMap<>();
+		param.put("enpo", jsonData);
+
+		String scriptCode = ""
+				+ "int found_index = -1;"
+				+ "for(int i=0;i<ctx._source.engagementPopups.length;i++) {"
+				+ "  if(ctx._source.engagementPopups[i].id == params.enpo.id){"
+				+ "    found_index = i;"
+				+ "    break;"
+				+ "  }"
+				+ "}"
+				+ "if (found_index < 0) {"
+				+ "  ctx._source.engagementPopups.add(params.enpo);"
+				+ "}";
+
+		Script inline = new Script(ScriptType.INLINE, "painless",scriptCode, param);
+
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		updateRequest.script(inline);
+
+		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+
+		return updateResponse.getResult().name();
+	}
+
+	@Override
+	public String updateEngagementPopup(DHEngagementPopup engagementPopup) throws IOException {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> jsonData = objectMapper.convertValue(engagementPopup, Map.class);
+		Map<String, Object> param = new HashMap<>();
+		param.put("enpo", jsonData);
+
+		String scriptCode = ""
+				+ "for(int i=0;i<ctx._source.engagementPopups.length;i++) {"
+				+ "  if (params.enpo.isActive == true) {"
+				+ "    if(ctx._source.engagementPopups[i].id != params.enpo.id) {"
+				+ "       if(ctx._source.engagementPopups[i].isActive == true) {"
+				+ "         ctx._source.engagementPopups[i].isActive = false;"
+				+ "       }"
+				+ "    }"
+				+ "  }"
+				+ "  if(ctx._source.engagementPopups[i].id == params.enpo.id){"
+				+ "    ctx._source.engagementPopups[i] = params.enpo"
+				+ "  }"
+				+ "}";
+
+		Script inline = new Script(ScriptType.INLINE, "painless",scriptCode, param);
+
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		updateRequest.script(inline);
+
+		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+
+		return updateResponse.getResult().name();
+	}
+
+	@Override
+	public boolean removeEngagementPopup(String id) throws IOException {
+		Map<String, Object> param = new HashMap<>();
+		param.put("enpoId", id);
+
+		String scriptCode = ""
+				+ "int remove_index = -1;"
+				+ "for(int i=0;i<ctx._source.engagementPopups.length;i++) {"
+				+ "  if(ctx._source.engagementPopups[i].id == params.enpoId){"
+				+ "    remove_index = i;"
+				+ "    break;"
+				+ "  }"
+				+ "}"
+				+ "if (remove_index >= 0) {"
+				+ "  ctx._source.engagementPopups.remove(remove_index);"
+				+ "}";
+
+		Script inline = new Script(ScriptType.INLINE, "painless",scriptCode, param);
 
 		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
 		updateRequest.script(inline);
