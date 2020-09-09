@@ -1,14 +1,14 @@
 # datahub-admin-api
 DataHub Admin API
-> Version: 1.2.0
+> Version: 1.3.0
 
 The Admin API of DataHub has the function to administer the metadata information (documents) for the DataHub. The API connect to an ElasticSearch storage system. The API will do actions on the _configurations_ and _dataassets_ indexes. 
 
 ## Change Log
 Changes related to the previous version.
 
-> Previous Version: 1.1.0
-- Support for Engagement Popups
+> Previous Version: 1.2.0
+- Update to Java 11
 
 ## Usage
 Once the application is running on a configured port the API uses the standard REST verbs to manipulate the data.
@@ -250,28 +250,27 @@ The API requires the following environment variables
  
 |Name   |Required   |Default   |Description|
 |--|--|--|----|
-|datahub.admin.api.es.host|mandatory||Sets the host of the target ElasticSearch|
-|datahub.admin.api.es.port|mandatory||Sets the port that the target ElasticSearch is using.|
-|datahub.admin.api.es.scheme|mandatory||Sets the protocol scheme used by the target ElasticSearch (http or https)|
-|datahub.admin.api.security.token.name|optional|DHTOKEN|Token name for request authorization|
-|datahub.admin.api.security.token.key|mandatory||Expected Token value for request authorization|
-|datahub.admin.api.configurations.index|mandatory|configurations|Configurations Index name.|
-|datahub.admin.api.configurations.default|mandatory|datahub-default-configuration|Configuration name to be use by the API.|
-|datahub.admin.api.es.dataassets.index|optional|dataassets|Index name in ElasticSearch that contains the DataAssets.|
-|datahub.admin.api.es.sort.by|optional|lastUpdate|Field name that will be used for default sorting.|
-|datahub.admin.api.es.sort.order|optional|desc|Sorting direction (asc, desc).|
-|datahub.admin.api.origins|optional|*|Whitelist clients to avoid CORS.|
-|server.servlet.context-path|optional|/api|Set the DataHub Web API context path|
-|server.port|optional|3008|Sets the DataHub Admin API listening port|
-|datahub.admin.api.configurations.images.list|optional|none|URL to the file that contains the JSON array of image file names|
-|datahub.admin.api.configurations.images.path|optional|none|Base image path name|
-
+|DATAHUB_ADMIN_API_ES_HOST|mandatory||Sets the host of the target ElasticSearch|
+|DATAHUB_ADMIN_API_ES_PORT|mandatory||Sets the port that the target ElasticSearch is using|
+|DATAHUB_ADMIN_API_ES_SCHEME|mandatory||Sets the protocol scheme used by the target ElasticSearch (http or https)|
+|DATAHUB_ADMIN_API_SECURITY_TOKEN_NAME|optional|DHTOKEN|Token name for request authorization|
+|DATAHUB_ADMIN_API_SECURITY_TOKEN_KEY|mandatory||Expected Token value for request authorization|
+|DATAHUB_ADMIN_API_CONFIGURATIONS_INDEX|mandatory|configurations|Configurations Index name|
+|DATAHUB_ADMIN_API_CONFIGURATIONS_DEFAULT|mandatory|datahub-default-configuration|Configuration name to be use by the API|
+|DATAHUB_ADMIN_API_ES_DATAASSETS_INDEX|optional|dataassets|Index name in ElasticSearch that contains the DataAssets|
+|DATAHUB_ADMIN_API_ES_SORT_BY|optional|lastUpdate|Field name that will be used for default sorting|
+|DATAHUB_ADMIN_API_ES_SORT_ORDER|optional|desc|Sorting direction (asc, desc)|
+|DATAHUB_ADMIN_API_ORIGINS|optional|*|Whitelist clients to avoid CORS|
+|SERVER_SERVLET_CONTEXT-PATH|optional|/api|Set the DataHub Web API context path|
+|SERVER_PORT|optional|3008|Sets the DataHub Admin API listening port|
+|DATAHUB_ADMIN_API_CONFIGURATIONS_IMAGES_LIST|optional|none|URL to the file that contains the JSON array of image file names|
+|DATAHUB_ADMIN_API_CONFIGURATIONS_IMAGES_PATH|optional|none|Base image path name|
 
 ## Installation
 The API is a Java application and can be executed updating the values of the following command template.
 
 ```bash
-sh -c java -Djava.security.egd=file:/dev/./urandom -jar /datahub-admin-api-1.2.0.jar"
+sh -c java -Djava.security.egd=file:/dev/./urandom -jar /datahub-admin-api-1.3.0.jar"
 ```
 It is important to setup the environment variables before to execute the application.
 
@@ -303,11 +302,11 @@ A [Docker](https://www.docker.com/) image can be build with the next command lin
 The following command with the correct values for the environment variable will start a Docker container.
 ```bash
 docker run -p 3008:3008 --rm \
--e "server.port=3008" \
--e "datahub.admin.api.token.key=[DHTOKEN]" \
--e "datahub.admin.api.es.host=[HOST]" \
--e "datahub.admin.api.es.port=[PORT]" \
--e "datahub.admin.api.es.scheme=[SCHEME]" \
+-e "SERVER_PORT=3008" \
+-e "DATAHUB_ADMIN_API_TOKEN_KEY=[DHTOKEN]" \
+-e "DATAHUB_ADMIN_API_ES_HOST=[HOST]" \
+-e "DATAHUB_ADMIN_API_ES_PORT=[PORT]" \
+-e "DATAHUB_ADMIN_API_ES_SCHEME=[SCHEME]" \
 -e "JAVA_OPTS=-Xmx512M -Xms512M" \
 -t -i datahub-admin-api:latest
 ```
@@ -320,6 +319,8 @@ docker run -p 3008:3008 --rm \
   * Support for DataTypes
 * 1.2.0
   * Support for Engagement Popups
+* 1.3.0
+  * Update to Java 11
 
 
 ## Contact information
