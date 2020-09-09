@@ -5,16 +5,16 @@
 = ITS DataHub
 
 == Admin API
-`version: 1.2.0`
+`version: 1.3.0`
 
 The Admin API of DataHub has the function to administer the metadata information for the DataHub system. The API connect to an https://www.elastic.co/products/enterprise-search[ElasticSearch] storage system
 
 === Change Log
 Changes related to the previous version.
 
-`Previous version: 1.1.0`
+`Previous version: 1.2.0`
 
-* Support for Engagement Popups
+* Update to Java 11
 
 
 == Header token validation
