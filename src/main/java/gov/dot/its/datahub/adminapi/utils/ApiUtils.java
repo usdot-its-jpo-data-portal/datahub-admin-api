@@ -25,7 +25,7 @@ import gov.dot.its.datahub.adminapi.model.ApiError;
 @Component
 public class ApiUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(ApiUtils.class);
+	private static final Logger loggerapi = LoggerFactory.getLogger(ApiUtils.class);
 
 	@Value("${datahub.admin.api.debug}")
 	private boolean debug;
@@ -69,7 +69,7 @@ public class ApiUtils {
 			byte[] bytes = messageDigest.digest();
 			return DatatypeConverter.printHexBinary(bytes).toLowerCase();
 		} catch (NoSuchAlgorithmException e) {
-			logger.error(e.getMessage());
+			loggerapi.error(e.getMessage());
 			return null;
 		} 
 	}
@@ -102,14 +102,14 @@ public class ApiUtils {
 
 	public List<ApiError> getErrorsFromException(List<ApiError> errors, Exception e) {
 		errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage())));
-		logger.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
+		loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
 		if (debug) {
-			logger.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
+			loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
 		}
 		if (e.getSuppressed().length > 0) {
 			for (Throwable x : e.getSuppressed()) {
 				errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString())));
-				logger.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
+				loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
 			}
 		}
 		return errors;

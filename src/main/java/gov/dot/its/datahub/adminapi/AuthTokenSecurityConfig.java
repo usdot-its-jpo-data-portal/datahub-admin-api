@@ -42,7 +42,7 @@ public class AuthTokenSecurityConfig extends WebSecurityConfigurerAdapter {
 		PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter(tokenName);
 		filter.setAuthenticationManager(new AuthenticationManager() {
 			@Override
-			public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+			public Authentication authenticate(Authentication authentication)  {
 				String principal = (String) authentication.getPrincipal();
 				if (!tokenKey.equals(principal)) {
 					throw new BadCredentialsException("Invalid Token.");
