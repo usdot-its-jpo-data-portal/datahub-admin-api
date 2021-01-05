@@ -83,7 +83,7 @@ public class DataAssetsDaoImpl implements DataAssetsDao {
 
 	@Override
 	public DataAsset getDataAssetById(String id) throws IOException {
-		GetRequest getRequest = new GetRequest(dataAssetsIndex, "_doc", id);
+		GetRequest getRequest = new GetRequest(dataAssetsIndex, id);
 		FetchSourceContext fetchSourceContext = new FetchSourceContext(true, includedFields, new String[] {});
 		getRequest.fetchSourceContext(fetchSourceContext);
 		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
@@ -105,7 +105,7 @@ public class DataAssetsDaoImpl implements DataAssetsDao {
     jsonMap.put("dhDataTypes", dataAsset.getDhDataTypes());
 		jsonMap.put("dhLastUpdate", new Date(dataAsset.getDhLastUpdate().getTime()));
 
-		UpdateRequest updateRequest = new UpdateRequest(dataAssetsIndex, "_doc", dataAsset.getDhId()).doc(jsonMap);
+		UpdateRequest updateRequest = new UpdateRequest(dataAssetsIndex, dataAsset.getDhId()).doc(jsonMap);
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
 		return updateResponse.getResult().name();
 	}

@@ -56,7 +56,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 	@Override
 	public DHConfiguration getConfiguration() throws IOException {
-		GetRequest getRequest = new GetRequest(configurationsIndex, "_doc", configurationId);
+		GetRequest getRequest = new GetRequest(configurationsIndex, configurationId);
 		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
 		if (!getResponse.isExists()) {
 			return null;
@@ -72,7 +72,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 	@Override
 	public List<DHProject> getProjects() throws IOException {
-		GetRequest getRequest = new GetRequest(configurationsIndex, "_doc", configurationId);
+		GetRequest getRequest = new GetRequest(configurationsIndex, configurationId);
 		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
 		if (!getResponse.isExists()) {
 			return new ArrayList<>();
@@ -127,7 +127,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -153,7 +153,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -180,7 +180,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -203,7 +203,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 	@Override
 	public List<DHDataType> getDataTypes() throws IOException {
-		GetRequest getRequest = new GetRequest(configurationsIndex, "_doc", configurationId);
+		GetRequest getRequest = new GetRequest(configurationsIndex, configurationId);
 		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
 		if (!getResponse.isExists()) {
 			return new ArrayList<>();
@@ -258,7 +258,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -284,7 +284,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -311,7 +311,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -321,7 +321,7 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 
 	@Override
 	public List<DHEngagementPopup> getEngagementPopups() throws IOException {
-		GetRequest getRequest = new GetRequest(configurationsIndex, "_doc", configurationId);
+		GetRequest getRequest = new GetRequest(configurationsIndex, configurationId);
 		GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
 		if (!getResponse.isExists()) {
 			return new ArrayList<>();
@@ -354,10 +354,10 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "if (found_index < 0) {"
 				+ "  ctx._source.engagementPopups.add(params.enpo);"
 				+ "}";
+		
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		Script inline = new Script(ScriptType.INLINE, "painless",scriptCode, param);
-
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -386,9 +386,9 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  }"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, "painless",scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -413,9 +413,9 @@ public class ConfigurationDaoImpl implements ConfigurationDao {
 				+ "  ctx._source.engagementPopups.remove(remove_index);"
 				+ "}";
 
-		Script inline = new Script(ScriptType.INLINE, "painless",scriptCode, param);
+		Script inline = new Script(ScriptType.INLINE, ES_SCRIPT_PAINLESS, scriptCode, param);
 
-		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, "_doc", configurationId);
+		UpdateRequest updateRequest = new UpdateRequest(configurationsIndex, configurationId);
 		updateRequest.script(inline);
 
 		UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
