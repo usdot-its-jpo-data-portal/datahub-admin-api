@@ -1,8 +1,8 @@
 package gov.dot.its.datahub.adminapi.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import java.util.Date;
 
 import org.junit.Test;
@@ -57,9 +57,9 @@ public class HealthControllerTest {
 		ApiResponse<Date> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNotNull(responseApi.getResult());
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 	}
 
 }

@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import gov.dot.its.datahub.adminapi.model.ApiError;
 
@@ -25,7 +27,7 @@ import gov.dot.its.datahub.adminapi.model.ApiError;
 @Component
 public class ApiUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(ApiUtils.class);
+	private static final Logger loggerapi = LoggerFactory.getLogger(ApiUtils.class);
 
 	@Value("${datahub.admin.api.debug}")
 	private boolean debug;
@@ -69,7 +71,7 @@ public class ApiUtils {
 			byte[] bytes = messageDigest.digest();
 			return DatatypeConverter.printHexBinary(bytes).toLowerCase();
 		} catch (NoSuchAlgorithmException e) {
-			logger.error(e.getMessage());
+			loggerapi.error(e.getMessage());
 			return null;
 		} 
 	}
@@ -102,14 +104,14 @@ public class ApiUtils {
 
 	public List<ApiError> getErrorsFromException(List<ApiError> errors, Exception e) {
 		errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage())));
-		logger.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
+		loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
 		if (debug) {
-			logger.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
+			loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
 		}
 		if (e.getSuppressed().length > 0) {
 			for (Throwable x : e.getSuppressed()) {
 				errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString())));
-				logger.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
+				loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
 			}
 		}
 		return errors;
@@ -119,4 +121,24 @@ public class ApiUtils {
 		return UUID.randomUUID().toString();
 	}
 
+	public String stringFormat(String template, Object... values) {
+		int n = StringUtils.countOccurrencesOf(template, "%s");
+		if (n == values.length) {
+			return String.format(template, values);
+		}
+		Object[] result = new Object[n];
+		Arrays.fill(result, "");
+		if (n > values.length) {
+			System.arraycopy(values, 0, result, 0, values.length);
+			return String.format(template, result);
+		}
+
+		System.arraycopy(values, 0, result, 0, result.length);
+		StringBuilder s = new StringBuilder();
+		for(int i=n; i<values.length; i++) {
+			s.append(values[i] == null ? "": values[i] + " ");
+		}
+		result[result.length-1] = (result[result.length-1] == null ? "" : result[result.length-1])+ " " +s.toString();
+		return String.format(template, result);
+	}
 }
