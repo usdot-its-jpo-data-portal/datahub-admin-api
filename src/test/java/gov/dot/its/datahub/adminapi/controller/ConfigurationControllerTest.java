@@ -128,7 +128,7 @@ public class ConfigurationControllerTest {
 		ApiResponse<DHConfiguration> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertNull(responseApi.getErrors());
-		assertNotNull(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 		assertNull(responseApi.getMessages());
 	}
