@@ -516,7 +516,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
-
 		} catch(ElasticsearchStatusException | IOException e) {
 			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
 		}

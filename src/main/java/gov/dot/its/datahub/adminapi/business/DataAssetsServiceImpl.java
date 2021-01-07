@@ -25,6 +25,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 	private static final Logger loggerda = LoggerFactory.getLogger(ConfigurationServiceImpl.class);
 	private static final String MESSAGE_TEMPLATE = "{} : {} ";
+	final String RESPONSE_MSG = "Response: GET Data Assets. ";
 
 	@Autowired
 	private DataAssetsDao dataAssetsDao;
@@ -35,7 +36,6 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 	@Override
 	public ApiResponse<List<DataAsset>> dataAssets(HttpServletRequest request) {
 		loggerda.info("Request: Data Assets");
-		final String RESPONSE_MSG = "Response: GET Data Assets. ";
 
 		ApiResponse<List<DataAsset>> apiResponse = new ApiResponse<>();
 		List<ApiError> errors = new ArrayList<>();
@@ -63,7 +63,6 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 	@Override
 	public ApiResponse<DataAsset> dataAsset(HttpServletRequest request, String id) {
 		loggerda.info("Request: Get DataAsset by ID");
-		final String RESPONSE_MSG = "Response: GET DataAsset ";
 
 		List<ApiError> errors = new ArrayList<>();
 		ApiResponse<DataAsset> apiResponse = new ApiResponse<>();
@@ -75,12 +74,12 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 			if (dataAsset != null) {
 				apiResponse.setResponse(HttpStatus.OK, dataAsset, messages, null, request);
-				loggerda.info(MESSAGE_TEMPLATE);
+				loggerda.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
-			loggerda.info(MESSAGE_TEMPLATE);
+			loggerda.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 
@@ -104,7 +103,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				loggerda.info(MESSAGE_TEMPLATE + " " + result);
+				loggerda.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + result);
 				apiResponse.setResponse(HttpStatus.OK, dataAsset, messages, null, request);
 				return apiResponse;
 			}
@@ -112,7 +111,6 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 			loggerda.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
-
 
 		} catch(ElasticsearchStatusException | IOException e) {
 			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);

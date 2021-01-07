@@ -184,7 +184,6 @@ public class ConfigurationControllerTest {
 		assertNull(responseApi.getErrors());
 		assertNull(responseApi.getMessages());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		//assertNull(responseApi.getResult());
 	}
 
 	@Test
