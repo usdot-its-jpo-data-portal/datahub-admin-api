@@ -103,14 +103,14 @@ public class ApiUtils {
 
 	public List<ApiError> getErrorsFromException(List<ApiError> errors, Exception e) {
 		errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage())));
-		loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
+		loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
 		if (debug) {
-			loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
+			loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
 		}
 		if (e.getSuppressed().length > 0) {
 			for (Throwable x : e.getSuppressed()) {
 				errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString())));
-				loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
+				loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
 			}
 		}
 		return errors;

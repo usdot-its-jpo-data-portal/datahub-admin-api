@@ -143,7 +143,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result != null) {
 				messages.add(new ApiMessage(result));
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
 				return apiResponse;
 			}
 
@@ -172,7 +172,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
 				return apiResponse;
 			}
@@ -325,7 +325,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result != null) {
 				messages.add(new ApiMessage(result));
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
 				return apiResponse;
 			}
 
@@ -354,7 +354,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
 				return apiResponse;
 			}
@@ -449,7 +449,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE + " " + result);
+				logger.info(MESSAGE_TEMPLATE + result);
 				apiResponse.setResponse(HttpStatus.OK, cdEngagementPopup, messages, null, request);
 				return apiResponse;
 			}
@@ -478,7 +478,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
 				apiResponse.setResponse(HttpStatus.OK, engagementPopup, messages, null, request);
 				return apiResponse;
 			}
@@ -515,6 +515,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
 			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
+
 
 		} catch(ElasticsearchStatusException | IOException e) {
 			return apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, apiUtils.getErrorsFromException(errors, e), request);
