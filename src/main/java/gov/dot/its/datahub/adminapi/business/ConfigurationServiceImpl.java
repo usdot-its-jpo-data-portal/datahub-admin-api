@@ -172,7 +172,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
 				return apiResponse;
 			}
@@ -325,7 +325,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result != null) {
 				messages.add(new ApiMessage(result));
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				return apiResponse;
 			}
 
@@ -354,7 +354,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
 				return apiResponse;
 			}

@@ -63,7 +63,6 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 	@Override
 	public ApiResponse<DataAsset> dataAsset(HttpServletRequest request, String id) {
 		loggerda.info("Request: Get DataAsset by ID");
-		final String RESPONSE_MSG = "Response: GET DataAsset ";
 
 		List<ApiError> errors = new ArrayList<>();
 		ApiResponse<DataAsset> apiResponse = new ApiResponse<>();
@@ -92,7 +91,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 	@Override
 	public ApiResponse<DataAsset> updateDataAsset(HttpServletRequest request, DataAsset dataAsset) {
 		loggerda.info("Request: Update DataAsset");
-		final String RESPONSE_MSG = "Response: PUT DataAsset ";
+		final String RESPONSE_MSG_API = "Response: PUT DataAsset ";
 
 		List<ApiError> errors = new ArrayList<>();
 		List<ApiMessage> messages = new ArrayList<>();
@@ -109,7 +108,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 				return apiResponse;
 			}
 
-			loggerda.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
+			loggerda.info(MESSAGE_TEMPLATE, RESPONSE_MSG_API);
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
