@@ -449,7 +449,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, result);
+				logger.info("{} : {}", result);
 				apiResponse.setResponse(HttpStatus.OK, cdEngagementPopup, messages, null, request);
 				return apiResponse;
 			}
