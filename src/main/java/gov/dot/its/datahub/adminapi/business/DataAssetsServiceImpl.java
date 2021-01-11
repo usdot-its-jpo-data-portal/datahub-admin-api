@@ -103,7 +103,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				loggerda.info(MESSAGE_TEMPLATE + result);
+				loggerda.info(MESSAGE_TEMPLATE, result);
 				apiResponse.setResponse(HttpStatus.OK, dataAsset, messages, null, request);
 				return apiResponse;
 			}

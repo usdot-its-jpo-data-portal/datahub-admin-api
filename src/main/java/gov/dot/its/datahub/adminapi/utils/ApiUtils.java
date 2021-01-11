@@ -31,6 +31,9 @@ public class ApiUtils {
 	@Value("${datahub.admin.api.debug}")
 	private boolean debug;
 
+	@Value("${datahub.admin.api.error}")
+	private boolean error;
+
 	private static final String MESSAGE_TEMPLATE = "%s : %s ";
 	private static final String ERROR_LABEL = "Error";
 
@@ -103,8 +106,8 @@ public class ApiUtils {
 
 	public List<ApiError> getErrorsFromException(List<ApiError> errors, Exception e) {
 		errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage())));
-		loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
-		if (debug) {
+		
+		if (debug || error) {
 			loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
 		}
 		if (e.getSuppressed().length > 0) {
