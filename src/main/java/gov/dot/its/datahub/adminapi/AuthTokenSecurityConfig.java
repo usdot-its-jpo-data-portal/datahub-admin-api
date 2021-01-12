@@ -39,16 +39,13 @@ public class AuthTokenSecurityConfig extends WebSecurityConfigurerAdapter {
 			tokenKey = apiUtils.getMd5(apiUtils.getUUID()).toUpperCase();
 		}
 		PreAuthTokenHeaderFilter filter = new PreAuthTokenHeaderFilter(tokenName);
-		filter.setAuthenticationManager(new AuthenticationManager() {
-			@Override
-			public Authentication authenticate(Authentication authentication)  {
+		filter.setAuthenticationManager((Authentication authentication ) -> {
 				String principal = (String) authentication.getPrincipal();
 				if (!tokenKey.equals(principal)) {
 					throw new BadCredentialsException("Invalid Token.");
 				}
 				authentication.setAuthenticated(true);
 				return authentication;
-			}
 		});
 
 		http.antMatcher("/v?/**").csrf().disable().sessionManagement()
