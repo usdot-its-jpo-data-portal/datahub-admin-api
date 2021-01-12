@@ -1,6 +1,8 @@
 package gov.dot.its.datahub.adminapi.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -125,10 +127,10 @@ public class ConfigurationControllerTest {
 		};
 		ApiResponse<DHConfiguration> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getResult() != null);
+		assertNull(responseApi.getErrors());
+		assertNotNull(responseApi.getResult());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getMessages() == null);
+		assertNull(responseApi.getMessages());
 	}
 
 	@Test
@@ -153,9 +155,9 @@ public class ConfigurationControllerTest {
 		ApiResponse<List<DHProject>> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getErrors() == null);
+		assertNull(responseApi.getErrors());
 		assertTrue(!responseApi.getResult().isEmpty());
-		assertTrue(responseApi.getMessages() == null);
+		assertNull(responseApi.getMessages());
 	}
 
 	@Test
@@ -179,10 +181,9 @@ public class ConfigurationControllerTest {
 		};
 		ApiResponse<DHProject> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
 	}
 
 	@Test
@@ -208,10 +209,10 @@ public class ConfigurationControllerTest {
 		};
 		ApiResponse<DHProject> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getErrors() == null);
+		assertNull(responseApi.getErrors());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNotNull(responseApi.getResult());
+		assertNull(responseApi.getMessages());
 	}
 
 	@Test
@@ -238,7 +239,7 @@ public class ConfigurationControllerTest {
 		ApiResponse<DHProject> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 
 	}
 
@@ -264,7 +265,7 @@ public class ConfigurationControllerTest {
 		};
 		ApiResponse<DHProject> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 	}
 
@@ -292,8 +293,8 @@ public class ConfigurationControllerTest {
 		ApiResponse<List<String>> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 		assertTrue(!responseApi.getResult().isEmpty());
 	}
 
@@ -320,7 +321,7 @@ public class ConfigurationControllerTest {
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 		assertTrue(!responseApi.getResult().isEmpty());
-		assertTrue(responseApi.getErrors() == null);
+		assertNull(responseApi.getErrors());
 	}
 
 	@Test
@@ -344,9 +345,9 @@ public class ConfigurationControllerTest {
 		};
 		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getErrors() == null);
+		assertNull(responseApi.getErrors());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 	}
 
 	@Test
@@ -372,8 +373,8 @@ public class ConfigurationControllerTest {
 		};
 		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getResult() != null);
+		assertNull(responseApi.getErrors());
+		assertNotNull(responseApi.getResult());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 	}
 
@@ -401,7 +402,7 @@ public class ConfigurationControllerTest {
 		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 
 	}
 
@@ -428,7 +429,7 @@ public class ConfigurationControllerTest {
 		ApiResponse<DHDataType> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 	}
 
 	@Test
@@ -452,9 +453,9 @@ public class ConfigurationControllerTest {
 		TypeReference<ApiResponse<List<DHEngagementPopup>>> valueType = new TypeReference<ApiResponse<List<DHEngagementPopup>>>(){};
 		ApiResponse<List<DHEngagementPopup>> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getResult() != null);
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNotNull(responseApi.getResult());
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 	}
 
@@ -480,10 +481,10 @@ public class ConfigurationControllerTest {
 		TypeReference<ApiResponse<DHEngagementPopup>> valueType = new TypeReference<ApiResponse<DHEngagementPopup>>(){};
 		ApiResponse<DHEngagementPopup> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getMessages() == null);
-		assertTrue(responseApi.getErrors() == null);
+		assertNull(responseApi.getMessages());
+		assertNull(responseApi.getErrors());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
+		assertNotNull(responseApi.getResult());
 	}
 
 	@Test
@@ -508,10 +509,10 @@ public class ConfigurationControllerTest {
 		TypeReference<ApiResponse<DHEngagementPopup>> valueType = new TypeReference<ApiResponse<DHEngagementPopup>>(){};
 		ApiResponse<DHEngagementPopup> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getMessages() == null);
-		assertTrue(responseApi.getResult() != null);
+		assertNull(responseApi.getMessages());
+		assertNotNull(responseApi.getResult());
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getErrors() == null);
+		assertNull(responseApi.getErrors());
 	}
 
 	@Test
@@ -534,11 +535,11 @@ public class ConfigurationControllerTest {
 		TypeReference<ApiResponse<DHEngagementPopup>> valueType = new TypeReference<ApiResponse<DHEngagementPopup>>(){};
 		ApiResponse<DHEngagementPopup> responseApi = objectMapper.readValue(objString, valueType);
 
-		assertTrue(responseApi.getResult() != null);
-		assertTrue(responseApi.getErrors() == null);
+		assertNotNull(responseApi.getResult());
+		assertNull(responseApi.getErrors());
 		assertTrue(responseApi.getResult() instanceof DHEngagementPopup);
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getMessages() == null);
+		assertNull(responseApi.getMessages());
 	}
 
 

@@ -1,6 +1,8 @@
 package gov.dot.its.datahub.adminapi.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -10,7 +12,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Test;
@@ -90,8 +91,8 @@ public class DataAssetsControllerTest {
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 		assertTrue(!responseApi.getResult().isEmpty());
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 	}
 
 	@Test
@@ -116,9 +117,9 @@ public class DataAssetsControllerTest {
 		ApiResponse<DataAsset> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNotNull(responseApi.getResult());
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 	}
 
 	@Test
@@ -145,9 +146,9 @@ public class DataAssetsControllerTest {
 		ApiResponse<DataAsset> responseApi = objectMapper.readValue(objString, valueType);
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
-		assertTrue(responseApi.getResult() != null);
-		assertTrue(responseApi.getErrors() == null);
-		assertTrue(responseApi.getMessages() == null);
+		assertNotNull(responseApi.getResult());
+		assertNull(responseApi.getErrors());
+		assertNull(responseApi.getMessages());
 	}
 
 	private List<DataAsset> getFakeDataAssets() {

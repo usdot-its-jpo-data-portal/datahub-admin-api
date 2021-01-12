@@ -55,12 +55,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (configuration != null) {
 				apiResponse.setResponse(HttpStatus.OK, configuration, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -83,7 +83,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (projects != null && !projects.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, projects, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + projects.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + projects.size());
 				return apiResponse;
 			}
 
@@ -112,12 +112,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (project != null) {
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -143,12 +143,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result != null) {
 				messages.add(new ApiMessage(result));
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -172,12 +172,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				apiResponse.setResponse(HttpStatus.OK, project, messages, null, request);
 				return apiResponse;
 			}
 
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
@@ -209,12 +209,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 				messages.add(new ApiMessage(id));
 				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -237,12 +237,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (images != null && !images.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, images, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + images.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + images.size());
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -265,12 +265,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (dataTypes != null && !dataTypes.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, dataTypes, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + dataTypes.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + dataTypes.size());
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -294,12 +294,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (dataType != null) {
 				apiResponse.setResponse(HttpStatus.OK, dataType, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -325,12 +325,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result != null) {
 				messages.add(new ApiMessage(result));
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -354,12 +354,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString() + " " + result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				apiResponse.setResponse(HttpStatus.OK, dhDataType, messages, null, request);
 				return apiResponse;
 			}
 
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
@@ -389,14 +389,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 					messages.add(new ApiMessage(msg));
 				}
 
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 				messages.add(new ApiMessage(id));
 				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 		} catch (ElasticsearchStatusException | IOException e) {
@@ -419,12 +419,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (engagementPopups != null && !engagementPopups.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, engagementPopups, null, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+engagementPopups.size());
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG + " " + engagementPopups.size());
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NO_CONTENT, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NO_CONTENT.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 
@@ -449,12 +449,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				logger.info("{} : {}", result);
 				apiResponse.setResponse(HttpStatus.OK, cdEngagementPopup, messages, null, request);
 				return apiResponse;
 			}
 
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
@@ -478,12 +478,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 			if (result != null) {
 				messages.add(new ApiMessage(result));
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString()+" "+result);
+				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, result);
 				apiResponse.setResponse(HttpStatus.OK, engagementPopup, messages, null, request);
 				return apiResponse;
 			}
 
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.INTERNAL_SERVER_ERROR.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			apiResponse.setResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, request);
 			return apiResponse;
 
@@ -508,12 +508,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			if (result) {
 				messages.add(new ApiMessage(id));
 				apiResponse.setResponse(HttpStatus.OK, null, messages, null, request);
-				logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG,HttpStatus.OK.toString());
+				logger.info(MESSAGE_TEMPLATE);
 				return apiResponse;
 			}
 
 			apiResponse.setResponse(HttpStatus.NOT_FOUND, null, null, null, request);
-			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG, HttpStatus.NOT_FOUND.toString());
+			logger.info(MESSAGE_TEMPLATE, RESPONSE_MSG);
 			return apiResponse;
 
 

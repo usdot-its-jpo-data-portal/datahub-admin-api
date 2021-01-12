@@ -14,7 +14,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.xml.bind.DatatypeConverter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +30,9 @@ public class ApiUtils {
 
 	@Value("${datahub.admin.api.debug}")
 	private boolean debug;
+
+	@Value("${datahub.admin.api.error}")
+	private boolean error;
 
 	private static final String MESSAGE_TEMPLATE = "%s : %s ";
 	private static final String ERROR_LABEL = "Error";
@@ -104,14 +106,14 @@ public class ApiUtils {
 
 	public List<ApiError> getErrorsFromException(List<ApiError> errors, Exception e) {
 		errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage())));
-		loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.getMessage()));
-		if (debug) {
-			loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
+		
+		if (debug || error) {
+			loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, e.toString()));
 		}
 		if (e.getSuppressed().length > 0) {
 			for (Throwable x : e.getSuppressed()) {
 				errors.add(new ApiError(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString())));
-				loggerapi.error(String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
+				loggerapi.error("{0}", String.format(MESSAGE_TEMPLATE, ERROR_LABEL, x.toString()));
 			}
 		}
 		return errors;
