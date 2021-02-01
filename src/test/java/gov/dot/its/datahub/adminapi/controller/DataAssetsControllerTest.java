@@ -3,12 +3,16 @@ package gov.dot.its.datahub.adminapi.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static java.lang.System.out;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,6 +49,9 @@ public class DataAssetsControllerTest {
 
 	private static final String URL_DATAASSETS_TEMPLATE = "%s/v1/dataassets";
 	private static final String SECURITY_TOKEN_KEY = "datahub.admin.api.security.token.key";
+
+	@Value("${datahub.admin.api.configurations.mask.tag}")
+	private String maskTag;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -77,9 +85,45 @@ public class DataAssetsControllerTest {
 		ApiResponse<List<DataAsset>> apiResponse = new ApiResponse<>();
 		apiResponse.setResponse(HttpStatus.OK, dataAssets, null, null, request);
 
-		when(dataAssetsService.dataAssets(any(HttpServletRequest.class))).thenReturn(apiResponse);
+		when(dataAssetsService.dataAssets(any(HttpServletRequest.class), eq(false))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/get", "");
+				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/get", "", null);
+
+		MvcResult result = resultActions.andReturn();
+		String objString = result.getResponse().getContentAsString();
+
+		out.println("objString");
+		out.println(objString);
+		TypeReference<ApiResponse<List<DataAsset>>> valueType = new TypeReference<ApiResponse<List<DataAsset>>>() {
+		};
+		ApiResponse<List<DataAsset>> responseApi = objectMapper.readValue(objString, valueType);
+		
+		out.println("SIZE");
+		out.println(responseApi.getResult().size());
+
+		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
+		assertTrue(!responseApi.getResult().isEmpty());
+		assertTrue(responseApi.getErrors() == null);
+		assertTrue(responseApi.getMessages() == null);
+		assertTrue(responseApi.getResult().size() == 3);
+	}
+
+	@Test
+	public void testDataassetsWithMasked() throws Exception { // NOSONAR
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setMethod("GET");
+
+		List<DataAsset> dataAssets = this.getFakeDataAssets();
+
+		ApiResponse<List<DataAsset>> apiResponse = new ApiResponse<>();
+		apiResponse.setResponse(HttpStatus.OK, dataAssets, null, null, request);
+
+		Map<String, String> requestParams = new HashMap<>();
+		requestParams.put("includeMasked", "true");
+
+		when(dataAssetsService.dataAssets(any(HttpServletRequest.class), eq(true))).thenReturn(apiResponse);
+		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
+				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/get", "", requestParams);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -92,6 +136,7 @@ public class DataAssetsControllerTest {
 		assertTrue(!responseApi.getResult().isEmpty());
 		assertTrue(responseApi.getErrors() == null);
 		assertTrue(responseApi.getMessages() == null);
+		assertTrue(responseApi.getResult().size() == 4);
 	}
 
 	@Test
@@ -106,7 +151,7 @@ public class DataAssetsControllerTest {
 
 		when(dataAssetsService.dataAsset(any(HttpServletRequest.class), any(String.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATAASSETS_TEMPLATE + "/" + dataAsset.getDhId(), "api/v1/dataassets/get-id", "");
+				URL_DATAASSETS_TEMPLATE + "/" + dataAsset.getDhId(), "api/v1/dataassets/get-id", "", null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -135,7 +180,7 @@ public class DataAssetsControllerTest {
 				.thenReturn(apiResponse);
 		String dataAssetStr = objectMapper.writeValueAsString(dataAsset);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/put", dataAssetStr);
+				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/put", dataAssetStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -157,7 +202,8 @@ public class DataAssetsControllerTest {
 			DataAsset dataAsset = this.getFakeDataAsset(i);
 			dataAssets.add(dataAsset);
 		}
-
+		DataAsset dataAsset = this.getFakeMaskedDataAsset(3);
+		dataAssets.add(dataAsset);
 		return dataAssets;
 	}
 
@@ -200,6 +246,16 @@ public class DataAssetsControllerTest {
 			tags.add(String.format("tag-%s", k));
 		}
 
+		dataAsset.setTags(tags);
+
+		return dataAsset;
+	}
+
+	public DataAsset getFakeMaskedDataAsset(int index) {
+		DataAsset dataAsset = this.getFakeDataAsset(index);
+
+		List<String> tags = new ArrayList<>();
+		tags.add(this.maskTag);
 		dataAsset.setTags(tags);
 
 		return dataAsset;
