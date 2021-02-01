@@ -3,6 +3,7 @@ package gov.dot.its.datahub.adminapi.business;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +34,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 	private ApiUtils apiUtils;
 
 	@Override
-	public ApiResponse<List<DataAsset>> dataAssets(HttpServletRequest request) {
+	public ApiResponse<List<DataAsset>> dataAssets(HttpServletRequest request, boolean includeMasked) {
 		logger.info("Request: Data Assets");
 		final String RESPONSE_MSG = "Response: GET Data Assets. ";
 
@@ -41,8 +42,10 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 		List<ApiError> errors = new ArrayList<>();
 
 		try {
-
 			List<DataAsset> dataAssets = dataAssetsDao.getDataAssets();
+			if (!includeMasked) {
+				dataAssets = dataAssets.stream().filter(d -> !d.isHidden()).collect(Collectors.toList());
+			}
 
 			if (!dataAssets.isEmpty()) {
 				apiResponse.setResponse(HttpStatus.OK, dataAssets, null, null, request);

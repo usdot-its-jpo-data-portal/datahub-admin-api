@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.dot.its.datahub.adminapi.business.DataAssetsService;
@@ -26,9 +27,12 @@ public class DataAssetsController {
 	private DataAssetsService dataAssetsService;
 
 	@GetMapping(value="/v1/dataassets", headers="Accept=application/json", produces="application/json")
-	public ResponseEntity<ApiResponse<List<DataAsset>>> dataassets(HttpServletRequest request) {
+	public ResponseEntity<ApiResponse<List<DataAsset>>> dataassets(
+		HttpServletRequest request, 
+		@RequestParam(value="includeMasked", required=false, defaultValue="false") String includeMaskedString) {
 
-		ApiResponse<List<DataAsset>> apiResponse = dataAssetsService.dataAssets(request);
+		boolean includeMasked = includeMaskedString == "false" ? false : true;
+		ApiResponse<List<DataAsset>> apiResponse = dataAssetsService.dataAssets(request, includeMasked);
 
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 	}
