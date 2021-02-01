@@ -116,7 +116,7 @@ public class ConfigurationControllerTest {
 
 		when(configurationService.configurations(any(HttpServletRequest.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				"%s/v1/configurations", "api/v1/configurations/data", "");
+				"%s/v1/configurations", "api/v1/configurations/data", "", null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -143,7 +143,7 @@ public class ConfigurationControllerTest {
 
 		when(configurationService.projects(any(HttpServletRequest.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_PROJECTS_TEMPLATE, "api/v1/configurations/projects/get", null);
+				URL_PROJECTS_TEMPLATE, "api/v1/configurations/projects/get", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -170,7 +170,7 @@ public class ConfigurationControllerTest {
 
 		when(configurationService.project(any(HttpServletRequest.class), any(String.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_PROJECTS_TEMPLATE + "/" + project.getId(), "api/v1/configurations/projects/get-id", null);
+				URL_PROJECTS_TEMPLATE + "/" + project.getId(), "api/v1/configurations/projects/get-id", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -199,7 +199,7 @@ public class ConfigurationControllerTest {
 
 		String projectStr = objectMapper.writeValueAsString(project);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_PROJECTS_TEMPLATE, "api/v1/configurations/projects/post", projectStr);
+				URL_PROJECTS_TEMPLATE, "api/v1/configurations/projects/post", projectStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -228,7 +228,7 @@ public class ConfigurationControllerTest {
 
 		String projectStr = objectMapper.writeValueAsString(project);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_PROJECTS_TEMPLATE, "api/v1/configurations/projects/put", projectStr);
+				URL_PROJECTS_TEMPLATE, "api/v1/configurations/projects/put", projectStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -255,7 +255,7 @@ public class ConfigurationControllerTest {
 		.thenReturn(apiResponse);
 
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_PROJECTS_TEMPLATE + "/" + project.getId(), "api/v1/configurations/projects/delete", null);
+				URL_PROJECTS_TEMPLATE + "/" + project.getId(), "api/v1/configurations/projects/delete", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -282,7 +282,7 @@ public class ConfigurationControllerTest {
 		when(configurationService.projectImages(any(HttpServletRequest.class))).thenReturn(apiResponse);
 
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				"%s/v1/images/projects", "api/v1/configurations/projects/images", null);
+				"%s/v1/images/projects", "api/v1/configurations/projects/images", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -309,7 +309,7 @@ public class ConfigurationControllerTest {
 
 		when(configurationService.dataTypes(any(HttpServletRequest.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/get", null);
+				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/get", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -335,7 +335,7 @@ public class ConfigurationControllerTest {
 
 		when(configurationService.dataType(any(HttpServletRequest.class), any(String.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATATYPES_TEMPLATE + "/" + dataType.getId(), "api/v1/configurations/datatypes/get-id", null);
+				URL_DATATYPES_TEMPLATE + "/" + dataType.getId(), "api/v1/configurations/datatypes/get-id", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -363,7 +363,7 @@ public class ConfigurationControllerTest {
 
 		String dataTypeStr = objectMapper.writeValueAsString(dataType);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/post", dataTypeStr);
+				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/post", dataTypeStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -391,7 +391,7 @@ public class ConfigurationControllerTest {
 
 		String dataTypeStr = objectMapper.writeValueAsString(dataType);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/put", dataTypeStr);
+				URL_DATATYPES_TEMPLATE, "api/v1/configurations/datatypes/put", dataTypeStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -418,7 +418,7 @@ public class ConfigurationControllerTest {
 		.thenReturn(apiResponse);
 
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-		URL_DATATYPES_TEMPLATE + "/" + dataType.getId(), "api/v1/configurations/datatypes/delete", null);
+		URL_DATATYPES_TEMPLATE + "/" + dataType.getId(), "api/v1/configurations/datatypes/delete", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -444,7 +444,7 @@ public class ConfigurationControllerTest {
 		when(configurationService.engagementpopups(any(HttpServletRequest.class))).thenReturn(apiResponse);
 		
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/get", null);
+				URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/get", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -472,7 +472,7 @@ public class ConfigurationControllerTest {
 
 		String engagementPopupStr = objectMapper.writeValueAsString(engagementPopup);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/post", engagementPopupStr);
+				URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/post", engagementPopupStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -500,7 +500,7 @@ public class ConfigurationControllerTest {
 
 		String engagementPopupStr = objectMapper.writeValueAsString(engagementPopup);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-		URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/put", engagementPopupStr);
+		URL_ENGAGEMENTPOPUP_TEMPLATE, "api/v1/configurations/engagementpopups/put", engagementPopupStr, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
@@ -526,7 +526,7 @@ public class ConfigurationControllerTest {
 
 		when(configurationService.deleteEngagementPopup(any(HttpServletRequest.class), any(String.class))).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-		URL_ENGAGEMENTPOPUP_TEMPLATE + "/" + engagementPopup.getId(), "api/v1/configurations/engagementpopups/delete", null);
+		URL_ENGAGEMENTPOPUP_TEMPLATE + "/" + engagementPopup.getId(), "api/v1/configurations/engagementpopups/delete", null, null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();

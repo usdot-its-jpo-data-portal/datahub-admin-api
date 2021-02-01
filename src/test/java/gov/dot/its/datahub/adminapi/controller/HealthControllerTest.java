@@ -47,7 +47,7 @@ public class HealthControllerTest {
 		apiResponse.setResponse(HttpStatus.OK, new Date(), null, null, request);
 
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
-				"%s/health", "api/health/data", "");
+				"%s/health", "api/health/data", "", null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();

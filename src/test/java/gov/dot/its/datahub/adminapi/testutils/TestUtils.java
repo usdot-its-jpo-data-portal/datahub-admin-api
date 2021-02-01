@@ -1,5 +1,8 @@
 package gov.dot.its.datahub.adminapi.testutils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,20 +31,27 @@ public class TestUtils {
 	private Environment env;
 
 	public ResultActions prepareResultActions(MockMvc mockMvc, String requestMethod, String testUrlTemplate,
-			String documentPath, String objStr)  throws Exception { // NOSONAR
-		return this.prepareResultActions(mockMvc, requestMethod, testUrlTemplate, documentPath, objStr, false);
+			String documentPath, String objStr, Map<String,String> requestParams)  throws Exception { // NOSONAR
+		return this.prepareResultActions(mockMvc, requestMethod, testUrlTemplate, documentPath, objStr, requestParams, false);
 	}
 
 	public ResultActions prepareResultActions(MockMvc mockMvc, String requestMethod, String testUrlTemplate,
-			String documentPath, String objStr,boolean noTokenHeader) throws Exception { // NOSONAR
+			String documentPath, String objStr, Map<String,String> requestParams, boolean noTokenHeader) throws Exception { // NOSONAR
 		String tokenKey = env.getProperty(SECURITY_TOKEN_KEY);
 		String tokenName = env.getProperty(SECURITY_TOKEN_NAME);
+
+		Map<String,String> params = requestParams == null ? new HashMap<>() : requestParams;
 
 		MockHttpServletRequestBuilder request = null;
 		switch (requestMethod) {
 		case "GET":
-			request = get(String.format(testUrlTemplate, env.getProperty(SERVER_SERVLET_CONTEXT_PATH)))
-			.contextPath(String.format("%s", env.getProperty(SERVER_SERVLET_CONTEXT_PATH)));
+			request = get(String.format(testUrlTemplate, env.getProperty(SERVER_SERVLET_CONTEXT_PATH)));
+			for (Map.Entry<String, String> param : params.entrySet()) {
+				String key = param.getKey();
+				String value = param.getValue();
+				request = request.param(key, value);
+			}
+			request = request.contextPath(String.format("%s", env.getProperty(SERVER_SERVLET_CONTEXT_PATH)));
 			break;
 		case "POST":
 			request = post(String.format(testUrlTemplate, env.getProperty(SERVER_SERVLET_CONTEXT_PATH)))
