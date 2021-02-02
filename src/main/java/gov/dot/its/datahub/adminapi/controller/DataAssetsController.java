@@ -31,7 +31,7 @@ public class DataAssetsController {
 		HttpServletRequest request, 
 		@RequestParam(value="includeMasked", required=false, defaultValue="false") String includeMaskedString) {
 
-		boolean includeMasked = includeMaskedString == "false" ? false : true;
+		boolean includeMasked = Boolean.parseBoolean(includeMaskedString);
 		ApiResponse<List<DataAsset>> apiResponse = dataAssetsService.dataAssets(request, includeMasked);
 
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -53,3 +53,4 @@ public class DataAssetsController {
 		return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 	}
 }
+
