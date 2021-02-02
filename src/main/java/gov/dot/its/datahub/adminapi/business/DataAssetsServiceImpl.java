@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import static java.lang.System.out;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +12,7 @@ import org.elasticsearch.ElasticsearchStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,9 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceImpl.class);
 	private static final String MESSAGE_TEMPLATE = "{} : {} ";
+	
+	@Value("${datahub.admin.api.configurations.mask.tag}")
+	private String maskTag;
 
 	@Autowired
 	private DataAssetsDao dataAssetsDao;
@@ -44,7 +49,7 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 		try {
 			List<DataAsset> dataAssets = dataAssetsDao.getDataAssets();
 			if (!includeMasked) {
-				dataAssets = dataAssets.stream().filter(d -> !d.isHidden()).collect(Collectors.toList());
+				dataAssets = dataAssets.stream().filter(d -> !d.getTags().contains(this.maskTag)).collect(Collectors.toList());
 			}
 
 			if (!dataAssets.isEmpty()) {
