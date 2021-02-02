@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -28,9 +26,6 @@ public class DataAsset {
 	private Metrics metrics;
 	private List<String> dhProjects;
 	private List<String> dhDataTypes;
-	
-	@Value("${datahub.admin.api.configurations.mask.tag}")
-	private String maskTag;
 
 	public DataAsset() {
 		this.tags = new ArrayList<>();
@@ -144,10 +139,6 @@ public class DataAsset {
 
 	public void setDhDataTypes(List<String> dhDataTypes) {
 		this.dhDataTypes = dhDataTypes;
-	}
-	
-	public boolean isHidden() {
-		return this.getTags().contains(this.maskTag);
 	}
 
 }

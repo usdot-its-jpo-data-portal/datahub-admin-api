@@ -15,23 +15,4 @@ public class DataAssetTest {
 		DataAsset dataAsset = new DataAsset();
 		assertNotNull(dataAsset);
 	}
-	
-	@Test
-	public void testHiddenAsset() {
-		DataAsset dataAsset = new DataAsset();
-		List<String> tags = new ArrayList<>();
-		tags.add("its-datahub-hide");
-		dataAsset.setTags(tags);
-		assertTrue(dataAsset.isHidden());
-    }
-	
-	@Test
-	public void testNonHiddenAsset() {
-		DataAsset dataAsset = new DataAsset();
-		List<String> tags = new ArrayList<>();
-		tags.add("its-datahub-hide");
-		dataAsset.setTags(tags);
-		assertTrue(!dataAsset.isHidden());
-    }
-    
 }
