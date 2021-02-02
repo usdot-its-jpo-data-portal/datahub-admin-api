@@ -3,9 +3,8 @@ package gov.dot.its.datahub.adminapi.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
-import static java.lang.System.out;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -81,25 +81,21 @@ public class DataAssetsControllerTest {
 		request.setMethod("GET");
 
 		List<DataAsset> dataAssets = this.getFakeDataAssets();
+		dataAssets = dataAssets.stream().filter(d -> !d.getTags().contains(this.maskTag)).collect(Collectors.toList());
 
 		ApiResponse<List<DataAsset>> apiResponse = new ApiResponse<>();
 		apiResponse.setResponse(HttpStatus.OK, dataAssets, null, null, request);
 
-		when(dataAssetsService.dataAssets(any(HttpServletRequest.class), eq(false))).thenReturn(apiResponse);
+		when(dataAssetsService.dataAssets(any(HttpServletRequest.class), anyBoolean())).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
 				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/get", "", null);
 
 		MvcResult result = resultActions.andReturn();
 		String objString = result.getResponse().getContentAsString();
 
-		out.println("objString");
-		out.println(objString);
 		TypeReference<ApiResponse<List<DataAsset>>> valueType = new TypeReference<ApiResponse<List<DataAsset>>>() {
 		};
 		ApiResponse<List<DataAsset>> responseApi = objectMapper.readValue(objString, valueType);
-		
-		out.println("SIZE");
-		out.println(responseApi.getResult().size());
 
 		assertEquals(HttpStatus.OK.value(), responseApi.getCode());
 		assertTrue(!responseApi.getResult().isEmpty());
@@ -121,7 +117,7 @@ public class DataAssetsControllerTest {
 		Map<String, String> requestParams = new HashMap<>();
 		requestParams.put("includeMasked", "true");
 
-		when(dataAssetsService.dataAssets(any(HttpServletRequest.class), eq(true))).thenReturn(apiResponse);
+		when(dataAssetsService.dataAssets(any(HttpServletRequest.class), anyBoolean())).thenReturn(apiResponse);
 		ResultActions resultActions = this.testUtils.prepareResultActions(this.mockMvc, request.getMethod(),
 				URL_DATAASSETS_TEMPLATE, "api/v1/dataassets/get", "", requestParams);
 
