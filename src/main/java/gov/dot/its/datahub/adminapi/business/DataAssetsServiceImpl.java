@@ -48,8 +48,10 @@ public class DataAssetsServiceImpl implements DataAssetsService {
 
 		try {
 			List<DataAsset> dataAssets = dataAssetsDao.getDataAssets();
+			out.println("includeMasked");
+			out.println(includeMasked);
 			if (!includeMasked) {
-				dataAssets = dataAssets.stream().filter(d -> !d.getTags().contains(this.maskTag)).collect(Collectors.toList());
+				dataAssets = dataAssets.stream().filter(d -> !d.getTags().contains("its-datahub-hide")).collect(Collectors.toList());
 			}
 
 			if (!dataAssets.isEmpty()) {
