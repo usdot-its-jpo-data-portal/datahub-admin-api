@@ -147,7 +147,7 @@ public class DataAsset {
 	}
 	
 	public boolean isHidden() {
-		return this.tags.contains(this.maskTag);
+		return this.getTags().contains(this.maskTag);
 	}
 
 }
